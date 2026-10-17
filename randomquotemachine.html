@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ee">
+  <meta name="description" content="A little pause for a fresh thought. Find a quote for wherever you are today.">
+  <title>Little Pause — Random Quote Machine</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      color: #292820;
+      background: #f7f4ee;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      --accent: #d7654c;
+      --accent-soft: #f3dfd6;
+      --ink-muted: #77756d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: grid;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px;
+      place-items: center;
+      background:
+        radial-gradient(ellipse at 10% 14%, rgb(237 219 198 / 52%), transparent 30%),
+        radial-gradient(ellipse at 94% 88%, rgb(218 228 215 / 56%), transparent 32%),
+        #f7f4ee;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .page {
+      width: min(100%, 850px);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 8px 26px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      color: #35342c;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: #e9e6db;
+      color: var(--accent);
+    }
+
+    .brand-mark svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .edition {
+      color: var(--ink-muted);
+      font-size: 0.72rem;
+      font-weight: 650;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .quote-card {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(34px, 7vw, 70px);
+      border: 1px solid rgb(58 54 44 / 7%);
+      border-radius: 28px;
+      background: rgb(255 254 250 / 94%);
+      box-shadow: 0 24px 70px rgb(68 61 44 / 9%), 0 3px 12px rgb(68 61 44 / 4%);
+    }
+
+    .quote-card::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent), #e7b17e 58%, #d9dfcc);
+      content: "";
+    }
+
+    .intro {
+      margin: 0 0 38px;
+      color: var(--ink-muted);
+      font-size: 0.86rem;
+      letter-spacing: 0.015em;
+    }
+
+    .quote-mark {
+      height: 45px;
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 5.25rem;
+      line-height: 1;
+      opacity: 0.85;
+    }
+
+    blockquote {
+      margin: 16px 0 0;
+    }
+
+    #text {
+      max-width: 690px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5.3vw, 3.55rem);
+      font-weight: 400;
+      letter-spacing: -0.045em;
+      line-height: 1.2;
+      text-wrap: pretty;
+    }
+
+    .quote-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 34px;
+    }
+
+    #author {
+      margin: 0;
+      color: #59574e;
+      font-size: 0.94rem;
+      font-weight: 650;
+    }
+
+    #category {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 12px;
+      border: 1px solid #e7e3d9;
+      border-radius: 999px;
+      color: #737066;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.025em;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 34px 0 26px;
+      border: 0;
+      background: #eeece5;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .share-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 19px;
+      border: 1px solid transparent;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-weight: 650;
+      text-decoration: none;
+      transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button:focus-visible,
+    .brand:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 55%, white);
+      outline-offset: 3px;
+    }
+
+    .button svg {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 auto;
+    }
+
+    .button-primary {
+      background: var(--accent);
+      color: #fffdfa;
+    }
+
+    .button-primary:hover {
+      background: color-mix(in srgb, var(--accent) 88%, #34251f);
+    }
+
+    .button-secondary {
+      border-color: #e8e5dd;
+      background: #fffefa;
+      color: #514f47;
+    }
+
+    .button-secondary:hover {
+      border-color: #d5d0c4;
+      background: #f8f6f0;
+    }
+
+    .hint {
+      min-height: 1.2em;
+      margin: 22px 0 0;
+      color: var(--ink-muted);
+      font-size: 0.75rem;
+      text-align: center;
+    }
+
+    .quote-content {
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .quote-content.is-changing {
+      transform: translateY(5px);
+      opacity: 0;
+    }
+
+    .footer-note {
+      margin: 23px 8px 0;
+      color: #89867d;
+      font-size: 0.72rem;
+      text-align: center;
+    }
+
+    @media (max-width: 540px) {
+      body {
+        padding: 22px 16px;
+      }
+
+      .topbar {
+        margin: 0 4px 20px;
+      }
+
+      .quote-card {
+        padding: 36px 25px 27px;
+        border-radius: 23px;
+      }
+
+      .intro {
+        margin-bottom: 32px;
+      }
+
+      #text {
+        font-size: clamp(1.9rem, 9vw, 2.6rem);
+      }
+
+      .quote-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 13px;
+        margin-top: 27px;
+      }
+
+      .divider {
+        margin: 27px 0 20px;
+      }
+
+      .actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      .share-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .button {
+        min-height: 47px;
+        padding: 0 13px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="./randomquotemachine.html" aria-label="Little Pause home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3.5c-1.2 4.5-3.1 6.5-7.5 8.5 4.4 1.3 6.3 3.3 7.5 8.5 1.3-5.2 3.1-7.2 7.5-8.5-4.4-2-6.2-4-7.5-8.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        Little Pause
+      </a>
+      <span class="edition">A thought for today</span>
+    </header>
+
+    <section class="quote-card" aria-labelledby="page-title">
+      <div class="quote-content" id="quote-content">
+        <p class="intro" id="page-title">Take a breath. Take what you need.</p>
+        <div class="quote-mark" aria-hidden="true">“</div>
+        <blockquote>
+          <p id="text" aria-live="polite" aria-atomic="true">Small steps still move you toward something new.</p>
+        </blockquote>
+        <div class="quote-footer">
+          <p id="author">— A note to keep</p>
+          <span id="category">Fresh starts</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="actions">
+        <button class="button button-primary" id="new-quote" type="button">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 7v5h-5M4.7 9A7.5 7.5 0 0 1 18 6l2 2M4 17v-5h5m10.3 3A7.5 7.5 0 0 1 6 18l-2-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          New thought
+        </button>
+        <div class="share-actions">
+          <button class="button button-secondary" id="copy-quote" type="button">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="8" y="8" width="12" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            Copy quote
+          </button>
+          <a class="button button-secondary" id="share-quote" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.4l7.3-8.4L1.9 2h6.5l4.5 6.8L18.9 2Zm-1.1 18h1.7L7.4 3.9H5.6L17.8 20Z"/>
+            </svg>
+            Share on X
+          </a>
+        </div>
+      </div>
+      <p class="hint" id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <p class="footer-note">A small collection of original reminders, for wherever you are.</p>
+  </main>
+
+  <script>
+    const quotes = [
+      {
+        text: "Small steps still move you toward something new.",
+        author: "A note to keep",
+        category: "Fresh starts",
+        accent: "#d7654c",
+        soft: "#f3dfd6"
+      },
+      {
+        text: "You do not have to see the whole path to take the next kind step.",
+        author: "A note to keep",
+        category: "Courage",
+        accent: "#567b70",
+        soft: "#dce9df"
+      },
+      {
+        text: "Rest is part of the work of becoming.",
+        author: "A note to keep",
+        category: "Rest",
+        accent: "#8b6a9d",
+        soft: "#e9e0ee"
+      },
+      {
+        text: "Let today be a beginning, not a verdict.",
+        author: "A note to keep",
+        category: "Fresh starts",
+        accent: "#c27643",
+        soft: "#f1e3d5"
+      },
+      {
+        text: "There is room to grow at your own pace.",
+        author: "A note to keep",
+        category: "Patience",
+        accent: "#58808b",
+        soft: "#dce9e9"
+      },
+      {
+        text: "Notice how far you have come before you decide how far remains.",
+        author: "A note to keep",
+        category: "Perspective",
+        accent: "#a05d65",
+        soft: "#f0dfe0"
+      },
+      {
+        text: "A quiet moment can make space for a clearer answer.",
+        author: "A note to keep",
+        category: "Reflection",
+        accent: "#737653",
+        soft: "#e8e8d8"
+      },
+      {
+        text: "You can begin again without making the last chapter a mistake.",
+        author: "A note to keep",
+        category: "Renewal",
+        accent: "#b46c4f",
+        soft: "#f2e3d8"
+      },
+      {
+        text: "Give yourself the same patience you offer the people you love.",
+        author: "A note to keep",
+        category: "Kindness",
+        accent: "#a15d76",
+        soft: "#f1e0e8"
+      },
+      {
+        text: "One honest try is more powerful than a perfect plan.",
+        author: "A note to keep",
+        category: "Momentum",
+        accent: "#557b61",
+        soft: "#dfe9de"
+      },
+      {
+        text: "The ordinary days are where a life is quietly made.",
+        author: "A note to keep",
+        category: "Everyday",
+        accent: "#8c7047",
+        soft: "#eee7d9"
+      },
+      {
+        text: "You are allowed to change your mind as you learn more about yourself.",
+        author: "A note to keep",
+        category: "Growth",
+        accent: "#6578a0",
+        soft: "#e2e7f0"
+      }
+    ];
+
+    const quoteContent = document.querySelector("#quote-content");
+    const quoteText = document.querySelector("#text");
+    const quoteAuthor = document.querySelector("#author");
+    const quoteCategory = document.querySelector("#category");
+    const status = document.querySelector("#status");
+    const shareLink = document.querySelector("#share-quote");
+    let currentQuoteIndex = 0;
+
+    function updateShareLink(quote) {
+      const text = `“${quote.text}” ${quote.author}`;
+      shareLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      shareLink.setAttribute("aria-label", `Share quote on X: ${quote.text}`);
+    }
+
+    function showQuote(index) {
+      const quote = quotes[index];
+      quoteContent.classList.add("is-changing");
+      status.textContent = "";
+
+      window.setTimeout(() => {
+        quoteText.textContent = quote.text;
+        quoteAuthor.textContent = `— ${quote.author}`;
+        quoteCategory.textContent = quote.category;
+        document.documentElement.style.setProperty("--accent", quote.accent);
+        document.documentElement.style.setProperty("--accent-soft", quote.soft);
+        updateShareLink(quote);
+        quoteContent.classList.remove("is-changing");
+      }, 180);
+    }
+
+    function getNextQuoteIndex() {
+      const offset = 1 + Math.floor(Math.random() * (quotes.length - 1));
+      return (currentQuoteIndex + offset) % quotes.length;
+    }
+
+    document.querySelector("#new-quote").addEventListener("click", () => {
+      currentQuoteIndex = getNextQuoteIndex();
+      showQuote(currentQuoteIndex);
+    });
+
+    document.querySelector("#copy-quote").addEventListener("click", async () => {
+      const quote = quotes[currentQuoteIndex];
+      const text = `“${quote.text}” ${quote.author}`;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        status.textContent = "Quote copied to your clipboard.";
+      } catch (error) {
+        const copyBuffer = document.createElement("textarea");
+        copyBuffer.value = text;
+        copyBuffer.setAttribute("readonly", "");
+        copyBuffer.style.position = "fixed";
+        copyBuffer.style.opacity = "0";
+        document.body.append(copyBuffer);
+        copyBuffer.select();
+        const copied = document.execCommand("copy");
+        copyBuffer.remove();
+
+        if (copied) {
+          status.textContent = "Quote copied to your clipboard.";
+        } else {
+          status.textContent = "Could not copy automatically. Select and copy the quote text instead.";
+          console.error("Clipboard copy failed.", error);
+        }
+      }
+    });
+
+    updateShareLink(quotes[currentQuoteIndex]);
+  </script>
+</body>
+</html>

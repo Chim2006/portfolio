@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f8">
+  <title>Daylight — Your day, in focus</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20231f;
+      --muted: #858982;
+      --line: #e9ebe6;
+      --paper: #fff;
+      --canvas: #f5f6f3;
+      --green: #668267;
+      --green-dark: #49644a;
+      --green-soft: #edf2eb;
+      --orange: #e8a779;
+      --lavender: #eae8f5;
+      --shadow: 0 12px 36px rgba(34, 43, 34, .055);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 246px minmax(0, 1fr); }
+    .sidebar {
+      background: #fbfcfa;
+      border-right: 1px solid var(--line);
+      padding: 27px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 31px;
+    }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 0 10px; font-size: 18px; font-weight: 750; letter-spacing: -.7px; }
+    .brand-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 11px; background: var(--green); color: white; font-size: 16px; }
+    .profile { display: flex; align-items: center; gap: 11px; padding: 11px 10px; border: 1px solid var(--line); border-radius: 13px; background: white; }
+    .avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #f2d8c5; color: #79583f; font-weight: 700; font-size: 12px; }
+    .profile-name { font-size: 12px; font-weight: 650; }
+    .profile-caption { color: var(--muted); font-size: 11px; margin-top: 3px; }
+    .section-label { margin: 0 10px 9px; color: #a0a49d; font-size: 10px; font-weight: 750; letter-spacing: 1.15px; text-transform: uppercase; }
+    .nav { display: grid; gap: 4px; }
+    .nav-item { display: flex; align-items: center; gap: 11px; width: 100%; padding: 10px 11px; border: 0; border-radius: 9px; background: transparent; color: #747a72; text-align: left; font-size: 13px; }
+    .nav-item:hover, .nav-item.active { background: var(--green-soft); color: var(--green-dark); }
+    .nav-item.active { font-weight: 650; }
+    .nav-icon { width: 18px; text-align: center; font-size: 15px; }
+    .nav-count { margin-left: auto; color: #999e96; font-size: 11px; }
+    .sidebar-bottom { margin-top: auto; }
+    .tip { padding: 16px; background: #f1f3eb; border-radius: 13px; }
+    .tip-icon { font-size: 18px; }
+    .tip strong { display: block; margin: 9px 0 5px; font-size: 12px; }
+    .tip p { margin: 0; color: #7e8479; font-size: 11px; line-height: 1.55; }
+    main { min-width: 0; padding: 31px clamp(20px, 5vw, 64px) 50px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; max-width: 1130px; margin: 0 auto 39px; }
+    .crumb { color: var(--muted); font-size: 12px; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-button { display: grid; place-items: center; width: 37px; height: 37px; border: 1px solid var(--line); border-radius: 11px; background: white; color: #777d75; }
+    .icon-button:hover { border-color: #cdd6ca; color: var(--green-dark); }
+    .date-pill { padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: white; color: #70766e; font-size: 11px; }
+    .content { max-width: 850px; margin: 0 auto; }
+    .greeting { margin-bottom: 25px; }
+    .eyebrow { color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+    h1 { margin: 8px 0 7px; font-size: clamp(28px, 4vw, 37px); letter-spacing: -1.7px; line-height: 1.12; }
+    .subtitle { margin: 0; color: var(--muted); font-size: 13px; }
+    .summary-grid { display: grid; grid-template-columns: 1.55fr 1fr 1fr; gap: 14px; margin-bottom: 27px; }
+    .summary-card { position: relative; overflow: hidden; min-height: 121px; padding: 17px 18px; border: 1px solid var(--line); border-radius: 15px; background: white; box-shadow: var(--shadow); }
+    .summary-card.progress-card { background: #eef3eb; border-color: #e9eee5; }
+    .card-label { color: #7e847c; font-size: 11px; }
+    .card-value { margin-top: 9px; font-size: 25px; font-weight: 700; letter-spacing: -.8px; }
+    .card-note { margin-top: 4px; color: #8c928a; font-size: 10px; }
+    .progress-ring { position: absolute; top: 23px; right: 20px; width: 67px; height: 67px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--green) 0 72%, #dce5d8 72%); }
+    .progress-ring:before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: #eef3eb; }
+    .progress-ring span { position: relative; font-size: 13px; font-weight: 700; color: var(--green-dark); }
+    .tasks-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0 1px 13px; }
+    .tasks-heading h2 { margin: 0; font-size: 16px; letter-spacing: -.3px; }
+    .task-count { margin-left: 7px; color: #9b9f98; font-size: 11px; font-weight: 450; }
+    .add-button { display: inline-flex; align-items: center; gap: 7px; padding: 9px 12px; border: 0; border-radius: 9px; background: var(--green); color: white; font-size: 11px; font-weight: 650; }
+    .add-button:hover { background: var(--green-dark); }
+    .task-list { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: white; box-shadow: var(--shadow); }
+    .task-row { display: flex; align-items: center; gap: 12px; min-height: 65px; padding: 12px 16px; border-bottom: 1px solid #f0f1ee; }
+    .task-row:last-child { border-bottom: 0; }
+    .task-row.completed .task-title { color: #a3a79f; text-decoration: line-through; }
+    .check { flex: 0 0 auto; width: 18px; height: 18px; display: grid; place-items: center; padding: 0; border: 1.5px solid #d6dad3; border-radius: 50%; background: white; color: white; font-size: 11px; }
+    .completed .check { border-color: var(--green); background: var(--green); }
+    .task-main { min-width: 0; flex: 1; }
+    .task-title { overflow: hidden; color: #353a34; font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .task-meta { display: flex; align-items: center; gap: 7px; margin-top: 5px; color: #9a9f97; font-size: 10px; }
+    .tag { padding: 4px 8px; border-radius: 20px; color: #71866d; background: #f0f4ed; font-size: 9px; white-space: nowrap; }
+    .tag.personal { color: #8978a5; background: #f1eff8; }
+    .tag.wellbeing { color: #b17c58; background: #fbf1e9; }
+    .task-time { min-width: 48px; color: #8f958d; font-size: 10px; text-align: right; }
+    .task-more { border: 0; background: transparent; color: #aaa; font-size: 16px; }
+    .empty-state { padding: 28px; color: var(--muted); text-align: center; font-size: 12px; }
+    .bottom-row { display: grid; grid-template-columns: 1.2fr .8fr; gap: 14px; margin-top: 18px; }
+    .mini-card { padding: 17px 18px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+    .mini-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .mini-head strong { font-size: 12px; }
+    .mini-head span { color: #9a9f97; font-size: 10px; }
+    .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .day { display: grid; justify-items: center; gap: 7px; color: #9a9f97; font-size: 9px; }
+    .day b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; color: #747a72; font-size: 10px; font-weight: 550; }
+    .day.today b { background: var(--green); color: white; }
+    .focus-number { color: var(--green-dark); font-size: 26px; font-weight: 700; letter-spacing: -.8px; }
+    .focus-copy { margin-top: 5px; color: #8c928a; font-size: 10px; line-height: 1.5; }
+    .focus-bar { height: 5px; margin-top: 13px; overflow: hidden; border-radius: 5px; background: #edf0ea; }
+    .focus-bar span { display: block; width: 64%; height: 100%; border-radius: inherit; background: #91aa8d; }
+    .toast { position: fixed; right: 24px; bottom: 22px; padding: 11px 15px; border-radius: 10px; background: #303b30; color: white; box-shadow: var(--shadow); font-size: 12px; opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 760px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: sticky; z-index: 2; top: 0; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { padding: 0; }
+      .profile, .sidebar-bottom, .section-label { display: none; }
+      .nav { display: flex; gap: 2px; }
+      .nav-item { width: auto; padding: 9px; }
+      .nav-item:not(.active) { display: none; }
+      .nav-item.active { font-size: 11px; }
+      main { padding: 21px 16px 36px; }
+      .topbar { margin-bottom: 30px; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .progress-card { grid-column: 1 / -1; }
+      .bottom-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 420px) {
+      .date-pill { display: none; }
+      .task-row { gap: 9px; padding-inline: 11px; }
+      .task-time { min-width: 40px; }
+      .tag { padding: 4px 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">✳</span> daylight</div>
+      <div class="profile">
+        <div class="avatar">JD</div>
+        <div><div class="profile-name">Jamie Davis</div><div class="profile-caption">A little progress, daily</div></div>
+      </div>
+      <div>
+        <p class="section-label">Workspace</p>
+        <nav class="nav" aria-label="Main navigation">
+          <button class="nav-item active"><span class="nav-icon">◷</span> My day <span class="nav-count">4</span></button>
+          <button class="nav-item" data-message="Your upcoming tasks are ready."><span class="nav-icon">▦</span> Upcoming</button>
+          <button class="nav-item" data-message="Here are all your notes."><span class="nav-icon">▤</span> Notes</button>
+        </nav>
+      </div>
+      <div>
+        <p class="section-label">Your lists</p>
+        <nav class="nav" aria-label="Task lists">
+          <button class="nav-item" data-message="Showing your work list."><span class="nav-icon">◈</span> Work <span class="nav-count">3</span></button>
+          <button class="nav-item" data-message="Showing your personal list."><span class="nav-icon">♡</span> Personal <span class="nav-count">2</span></button>
+          <button class="nav-item" data-message="Showing your wellbeing list."><span class="nav-icon">☼</span> Wellbeing <span class="nav-count">1</span></button>
+          <button class="nav-item" data-message="Create a new list from the task menu."><span class="nav-icon">＋</span> Add a list</button>
+        </nav>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="tip"><span class="tip-icon">🌱</span><strong>Make room to breathe</strong><p>You don't have to do it all today. Small steps count, too.</p></div>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div class="crumb">Workspace&nbsp; / &nbsp;<strong style="color:#60665e;font-weight:600">My day</strong></div>
+        <div class="top-actions"><span class="date-pill">Monday, October 12</span><button class="icon-button" aria-label="Notifications" data-toast="You're all caught up.">♧</button><button class="icon-button" aria-label="Settings" data-toast="Settings are coming soon.">⚙</button></div>
+      </header>
+      <section class="content">
+        <div class="greeting">
+          <div class="eyebrow">Monday, October 12</div>
+          <h1>Good morning, Jamie <span aria-hidden="true">☀️</span></h1>
+          <p class="subtitle">A fresh week, a fresh start. Here's what you have on your plate.</p>
+        </div>
+
+        <div class="summary-grid">
+          <article class="summary-card progress-card">
+            <div class="card-label">Daily progress</div>
+            <div class="card-value"><span id="done-count">2</span> of 7 tasks</div>
+            <div class="card-note" id="progress-note">You're finding your rhythm.</div>
+            <div class="progress-ring" id="progress-ring"><span id="progress-percent">29%</span></div>
+          </article>
+          <article class="summary-card">
+            <div class="card-label">On your list</div>
+            <div class="card-value" id="remaining-count">5</div>
+            <div class="card-note">A little at a time</div>
+          </article>
+          <article class="summary-card">
+            <div class="card-label">Focus time</div>
+            <div class="card-value">2.5<span style="font-size:14px;font-weight:550"> hrs</span></div>
+            <div class="card-note">Your goal: 4 hours</div>
+          </article>
+        </div>
+
+        <div class="tasks-heading">
+          <h2>Today's tasks <span class="task-count" id="heading-count">5 left</span></h2>
+          <button class="add-button" id="add-task"><span style="font-size:16px;line-height:12px">＋</span> Add a task</button>
+        </div>
+        <div class="task-list" id="task-list" aria-label="Today's tasks">
+          <div class="task-row completed">
+            <button class="check" aria-label="Mark Review project brief incomplete">✓</button>
+            <div class="task-main"><div class="task-title">Review project brief</div><div class="task-meta"><span class="tag">Work</span><span>•</span><span>Everything starts with clarity</span></div></div>
+            <span class="task-time">9:00</span><button class="task-more" aria-label="More options">···</button>
+          </div>
+          <div class="task-row">
+            <button class="check" aria-label="Complete Send the proposal"> </button>
+            <div class="task-main"><div class="task-title">Send the proposal to Alex</div><div class="task-meta"><span class="tag">Work</span><span>•</span><span>Don't forget the updated budget</span></div></div>
+            <span class="task-time">10:30</span><button class="task-more" aria-label="More options">···</button>
+          </div>
+          <div class="task-row">
+            <button class="check" aria-label="Complete Take a proper lunch break"> </button>
+            <div class="task-main"><div class="task-title">Take a proper lunch break</div><div class="task-meta"><span class="tag wellbeing">Wellbeing</span><span>•</span><span>Step away from your desk</span></div></div>
+            <span class="task-time">12:30</span><button class="task-more" aria-label="More options">···</button>
+          </div>
+          <div class="task-row">
+            <button class="check" aria-label="Complete Call Mum"> </button>
+            <div class="task-main"><div class="task-title">Call Mum</div><div class="task-meta"><span class="tag personal">Personal</span><span>•</span><span>Ask about her garden 🌷</span></div></div>
+            <span class="task-time">17:00</span><button class="task-more" aria-label="More options">···</button>
+          </div>
+          <div class="task-row">
+            <button class="check" aria-label="Complete Read for 20 minutes"> </button>
+            <div class="task-main"><div class="task-title">Read for 20 minutes</div><div class="task-meta"><span class="tag personal">Personal</span><span>•</span><span>A gentle end to the day</span></div></div>
+            <span class="task-time">20:30</span><button class="task-more" aria-label="More options">···</button>
+          </div>
+        </div>
+
+        <div class="bottom-row">
+          <article class="mini-card">
+            <div class="mini-head"><strong>This week</strong><span>October 12 – 18&nbsp;⌄</span></div>
+            <div class="week" aria-label="Week of October 12">
+              <div class="day today"><span>MON</span><b>12</b></div><div class="day"><span>TUE</span><b>13</b></div><div class="day"><span>WED</span><b>14</b></div><div class="day"><span>THU</span><b>15</b></div><div class="day"><span>FRI</span><b>16</b></div><div class="day"><span>SAT</span><b>17</b></div><div class="day"><span>SUN</span><b>18</b></div>
+            </div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-head"><strong>Your focus</strong><span>Today</span></div>
+            <div class="focus-number">2h 34m</div>
+            <div class="focus-copy">A good start. You're building a little momentum.</div>
+            <div class="focus-bar"><span></span></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const list = document.getElementById("task-list");
+    const toast = document.getElementById("toast");
+    let toastTimer;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function updateProgress() {
+      const rows = [...list.querySelectorAll(".task-row")];
+      const done = rows.filter(row => row.classList.contains("completed")).length;
+      const total = rows.length + 2;
+      const percent = total ? Math.round(done / total * 100) : 0;
+      document.getElementById("done-count").textContent = done;
+      document.getElementById("remaining-count").textContent = total - done;
+      document.getElementById("heading-count").textContent = `${total - done} left`;
+      document.getElementById("progress-percent").textContent = `${percent}%`;
+      document.getElementById("progress-ring").style.background = `conic-gradient(var(--green) 0 ${percent}%, #dce5d8 ${percent}% 100%)`;
+      document.getElementById("progress-note").textContent = done >= total ? "Everything you planned. Nicely done!" : "You're finding your rhythm.";
+    }
+
+    list.addEventListener("click", event => {
+      const button = event.target.closest(".check");
+      if (!button) return;
+      const row = button.closest(".task-row");
+      row.classList.toggle("completed");
+      button.textContent = row.classList.contains("completed") ? "✓" : "";
+      button.setAttribute("aria-label", `${row.classList.contains("completed") ? "Mark" : "Complete"} ${row.querySelector(".task-title").textContent}`);
+      updateProgress();
+    });
+
+    document.getElementById("add-task").addEventListener("click", () => {
+      const title = window.prompt("What would you like to get done?");
+      if (title === null) return;
+      if (!title.trim()) {
+        showToast("Give your task a name first.");
+        return;
+      }
+      const row = document.createElement("div");
+      row.className = "task-row";
+      const check = document.createElement("button");
+      check.className = "check";
+      check.setAttribute("aria-label", `Complete ${title.trim()}`);
+      const main = document.createElement("div");
+      main.className = "task-main";
+      const taskTitle = document.createElement("div");
+      taskTitle.className = "task-title";
+      taskTitle.textContent = title.trim();
+      const meta = document.createElement("div");
+      meta.className = "task-meta";
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = "Today";
+      meta.append(tag);
+      main.append(taskTitle, meta);
+      const more = document.createElement("button");
+      more.className = "task-more";
+      more.setAttribute("aria-label", "More options");
+      more.textContent = "···";
+      row.append(check, main, more);
+      list.append(row);
+      updateProgress();
+      showToast("Task added to your day.");
+    });
+
+    document.querySelectorAll("[data-toast]").forEach(button => {
+      button.addEventListener("click", () => showToast(button.dataset.toast));
+    });
+    document.querySelectorAll(".nav-item[data-message]").forEach(button => {
+      button.addEventListener("click", () => showToast(button.dataset.message));
+    });
+  </script>
+</body>
+</html>

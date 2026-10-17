@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FCC Drum Machine</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #8d8d8d;">
+
+<div id="root" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif;">
+  
+  <!-- User Story #1: Outer Container -->
+  <div id="drum-machine" style="background-color: #b3b3b3; width: 660px; display: flex; padding: 20px; border: 5px solid orange; border-radius: 5px; box-shadow: 0px 0px 15px 2px rgba(0,0,0,0.4); box-sizing: border-box; justify-content: space-between; align-items: center; position: relative;">
+    
+    <!-- Left Side: The 9 Drum Pads -->
+    <div class="pad-bank" style="width: 332px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+      
+      <!-- Pad 1 -->
+      <button class="drum-pad" id="Heater-1" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        Q
+        <audio class="clip" id="Q"></audio>
+      </button>
+      
+      <!-- Pad 2 -->
+      <button class="drum-pad" id="Heater-2" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        W
+        <audio class="clip" id="W"></audio>
+      </button>
+      
+      <!-- Pad 3 -->
+      <button class="drum-pad" id="Heater-3" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        E
+        <audio class="clip" id="E"></audio>
+      </button>
+      
+      <!-- Pad 4 -->
+      <button class="drum-pad" id="Heater-4" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        A
+        <audio class="clip" id="A"></audio>
+      </button>
+      
+      <!-- Pad 5 -->
+      <button class="drum-pad" id="Clap" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        S
+        <audio class="clip" id="S"></audio>
+      </button>
+      
+      <!-- Pad 6 -->
+      <button class="drum-pad" id="Open-HH" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        D
+        <audio class="clip" id="D"></audio>
+      </button>
+      
+      <!-- Pad 7 -->
+      <button class="drum-pad" id="Kick-n-Hat" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        Z
+        <audio class="clip" id="Z"></audio>
+      </button>
+      
+      <!-- Pad 8 -->
+      <button class="drum-pad" id="Kick" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        X
+        <audio class="clip" id="X"></audio>
+      </button>
+      
+      <!-- Pad 9 -->
+      <button class="drum-pad" id="Closed-HH" style="background-color: #7d7d7d; color: black; border: none; font-size: 1.5rem; font-weight: bold; width: 100px; height: 80px; border-radius: 5px; box-shadow: black 3px 3px 5px; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+        C
+        <audio class="clip" id="C"></audio>
+      </button>
+    </div>
+
+    <!-- Right Side: Controls Panel -->
+    <div class="controls-container" style="width: 240px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+      
+      <!-- Power Switch Component -->
+      <div class="control" style="text-align: center; font-weight: bold; font-size: 0.9rem;">
+        <p style="margin: 0 0 5px 0;">Power</p>
+        <div id="power-toggle" style="background-color: black; width: 50px; height: 20px; padding: 2px; cursor: pointer; display: flex; justify-content: flex-end; align-items: center; border: 1px solid black;">
+          <div id="power-handle" style="background-color: blue; width: 23px; height: 16px; border: 1px solid black;"></div>
+        </div>
+      </div>
+
+      <!-- User Story #2: Display screen container -->
+      <div id="display" style="background-color: #8d8d8d; width: 200px; min-height: 50px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; box-sizing: border-box; padding: 10px; text-align: center; border: 1px solid black;">
+        Power On
+      </div>
+
+      <!-- Volume Slider Component -->
+      <div class="volume-slider" style="width: 200px;">
+        <input type="range" id="volume-control" min="0" max="1" step="0.01" value="0.3" style="width: 100%; cursor: pointer;">
+      </div>
+
+      <!-- Bank Switch Component -->
+      <div class="control" style="text-align: center; font-weight: bold; font-size: 0.9rem;">
+        <p style="margin: 0 0 5px 0;">Bank</p>
+        <div id="bank-toggle" style="background-color: black; width: 50px; height: 20px; padding: 2px; cursor: pointer; display: flex; justify-content: flex-start; align-items: center; border: 1px solid black;">
+          <div id="bank-handle" style="background-color: blue; width: 23px; height: 16px; border: 1px solid black;"></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Optional freeCodeCamp CDN Test Suite (uncomment if testing locally) -->
+<!-- <script src="https://freecodecamp.org"></script> -->
+
+<script>
+  let isPowerOn = true;
+  let currentBank = "Heater";
+  let volumeLevel = 0.3;
+
+  const bank1 = {
+    Q: { id: "Heater-1", label: "Heater 1" },
+    W: { id: "Heater-2", label: "Heater 2" },
+    E: { id: "Heater-3", label: "Heater 3" },
+    A: { id: "Heater-4", label: "Heater 4" },
+    S: { id: "Clap", label: "Clap" },
+    D: { id: "Open-HH", label: "Open HH" },
+    Z: { id: "Kick-n-Hat", label: "Kick n' Hat" },
+    X: { id: "Kick", label: "Kick" },
+    C: { id: "Closed-HH", label: "Closed HH" }
+  };
+
+  const bank2 = {
+    Q: { id: "Chord-1", label: "Chord 1" },
+    W: { id: "Chord-2", label: "Chord 2" },
+    E: { id: "Chord-3", label: "Chord 3" },
+    A: { id: "Give-us-a-shout", label: "Shout" },
+    S: { id: "Dry-Open-HH", label: "Open HH" },
+    D: { id: "Snare-drum", label: "Snare" },
+    Z: { id: "Side-Stick", label: "Side Stick" },
+    X: { id: "Punchy-Kick", label: "Punchy Kick" },
+    C: { id: "Side-Snare", label: "Side Snare" }
+  };
+
+  const display = document.getElementById("display");
+  const volumeSlider = document.getElementById("volume-control");
+  const powerToggle = document.getElementById("power-toggle");
+  const powerHandle = document.getElementById("power-handle");
+  const bankToggle = document.getElementById("bank-toggle");
+  const bankHandle = document.getElementById("bank-handle");
+  const audioByKey = new Map(
+    [...document.querySelectorAll(".clip")].map((audio) => [audio.id, audio])
+  );
+
+  let audioContext;
+  let masterGain;
+
+  function getAudioContext() {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) {
+      display.textContent = "Audio not supported";
+      console.error("Web Audio is not supported in this browser.");
+      return null;
+    }
+
+    if (!audioContext) {
+      audioContext = new AudioContextClass();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = volumeLevel;
+      masterGain.connect(audioContext.destination);
+    }
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume().catch((error) => {
+        display.textContent = "Audio unavailable";
+        console.error("Unable to resume audio:", error);
+      });
+    }
+
+    return audioContext;
+  }
+
+  function playTone(context, frequencies, duration, wave = "sine") {
+    const start = context.currentTime;
+    for (const frequency of frequencies) {
+      const oscillator = context.createOscillator();
+      const envelope = context.createGain();
+      oscillator.type = wave;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      envelope.gain.setValueAtTime(0.0001, start);
+      envelope.gain.exponentialRampToValueAtTime(0.7, start + 0.008);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      oscillator.connect(envelope);
+      envelope.connect(masterGain);
+      oscillator.start(start);
+      oscillator.stop(start + duration);
+    }
+  }
+
+  function playKick(context, frequency = 130) {
+    const start = context.currentTime;
+    const oscillator = context.createOscillator();
+    const envelope = context.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, start);
+    oscillator.frequency.exponentialRampToValueAtTime(42, start + 0.16);
+    envelope.gain.setValueAtTime(0.9, start);
+    envelope.gain.exponentialRampToValueAtTime(0.0001, start + 0.22);
+    oscillator.connect(envelope);
+    envelope.connect(masterGain);
+    oscillator.start(start);
+    oscillator.stop(start + 0.23);
+  }
+
+  function playNoise(context, duration, cutoff, peak = 0.5) {
+    const start = context.currentTime;
+    const buffer = context.createBuffer(
+      1,
+      Math.ceil(context.sampleRate * duration),
+      context.sampleRate
+    );
+    const samples = buffer.getChannelData(0);
+    for (let index = 0; index < samples.length; index++) {
+      samples[index] = Math.random() * 2 - 1;
+    }
+
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
+    const envelope = context.createGain();
+    source.buffer = buffer;
+    filter.type = "highpass";
+    filter.frequency.setValueAtTime(cutoff, start);
+    envelope.gain.setValueAtTime(0.0001, start);
+    envelope.gain.exponentialRampToValueAtTime(peak, start + 0.006);
+    envelope.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    source.connect(filter);
+    filter.connect(envelope);
+    envelope.connect(masterGain);
+    source.start(start);
+    source.stop(start + duration);
+  }
+
+  function playAudio(key) {
+    if (!isPowerOn) return;
+
+    const padData = (currentBank === "Heater" ? bank1 : bank2)[key];
+    const context = getAudioContext();
+    if (!context || !padData) return;
+
+    display.textContent = padData.label;
+    if (currentBank !== "Heater" && ["Q", "W", "E"].includes(key)) {
+      const chord = { Q: [261.63, 329.63, 392], W: [293.66, 369.99, 440], E: [329.63, 415.3, 493.88] };
+      playTone(context, chord[key], 0.55);
+      return;
+    }
+
+    if (["Q", "X"].includes(key)) {
+      playKick(context, key === "Q" ? 145 : 95);
+    } else if (key === "Z" && currentBank === "Heater") {
+      playKick(context, 120);
+      playNoise(context, 0.16, 6500, 0.22);
+    } else if (["S", "D", "C"].includes(key) || (currentBank !== "Heater" && key === "A")) {
+      const cutoff = key === "C" ? 7000 : key === "D" ? 1600 : 1100;
+      const duration = key === "C" ? 0.09 : key === "D" ? 0.22 : 0.32;
+      playNoise(context, duration, cutoff, key === "S" ? 0.65 : 0.42);
+      if (key === "D" || (currentBank !== "Heater" && key === "A")) {
+        playTone(context, [180], 0.12, "triangle");
+      }
+    } else if (key === "A" || key === "E") {
+      playTone(context, [key === "A" ? 110 : 165], 0.28, "triangle");
+    } else if (key === "W") {
+      playNoise(context, 0.2, 1800, 0.5);
+      playTone(context, [190], 0.13, "triangle");
+    } else {
+      playTone(context, [currentBank === "Heater" ? 350 : 240], 0.2, "triangle");
+    }
+  }
+
+  document.querySelectorAll(".drum-pad").forEach((pad) => {
+    const key = pad.querySelector(".clip").id;
+    pad.addEventListener("click", () => playAudio(key));
+  });
+
+  window.addEventListener("keydown", (event) => {
+    const key = event.key.toUpperCase();
+    if (!audioByKey.has(key) || event.repeat) return;
+    event.preventDefault();
+    playAudio(key);
+  });
+
+  volumeSlider.addEventListener("input", () => {
+    volumeLevel = Number(volumeSlider.value);
+    if (masterGain && audioContext) {
+      masterGain.gain.setValueAtTime(volumeLevel, audioContext.currentTime);
+    }
+  });
+
+  powerToggle.addEventListener("click", () => {
+    isPowerOn = !isPowerOn;
+    powerToggle.style.justifyContent = isPowerOn ? "flex-end" : "flex-start";
+    powerHandle.style.backgroundColor = isPowerOn ? "blue" : "#555";
+    display.textContent = isPowerOn ? "Power On" : "Power Off";
+  });
+
+  bankToggle.addEventListener("click", () => {
+    currentBank = currentBank === "Heater" ? "Smooth Piano Kit" : "Heater";
+    bankToggle.style.justifyContent =
+      currentBank === "Heater" ? "flex-start" : "flex-end";
+    display.textContent =
+      currentBank === "Heater" ? "Heater Kit" : "Smooth Piano Kit";
+  });
+</script>
+</body>
+</html>

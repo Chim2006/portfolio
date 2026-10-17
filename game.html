@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d15">
+  <title>Neon Breach — Arcade Arena</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090d15;
+      --panel: rgba(15, 21, 32, .88);
+      --line: rgba(159, 182, 209, .15);
+      --text: #edf5ff;
+      --muted: #8593a7;
+      --cyan: #5de4ed;
+      --orange: #ff986e;
+      --lime: #c2f279;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(36, 65, 90, .31), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .game-shell { width: min(1040px, 100%); }
+    .topline { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin: 0 2px 14px; }
+    .brand { display: flex; align-items: center; gap: 11px; }
+    .mark { display: grid; place-items: center; width: 35px; height: 35px; border: 1px solid rgba(93, 228, 237, .25); border-radius: 11px; background: rgba(93, 228, 237, .09); color: var(--cyan); font-size: 18px; }
+    .brand-name { font-size: 14px; font-weight: 800; letter-spacing: 2px; }
+    .brand-sub { margin-top: 3px; color: var(--muted); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .top-hint { color: var(--muted); font-size: 11px; text-align: right; }
+    .game-frame { overflow: hidden; border: 1px solid rgba(148, 174, 204, .2); border-radius: 18px; background: #101723; box-shadow: 0 28px 90px rgba(0, 0, 0, .45), 0 0 50px rgba(49, 170, 189, .07); }
+    .hud { display: grid; grid-template-columns: 1fr 1.15fr 1fr auto; align-items: center; gap: 18px; min-height: 78px; padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    .stat-label { color: var(--muted); font-size: 9px; font-weight: 750; letter-spacing: 1.6px; text-transform: uppercase; }
+    .stat-value { margin-top: 5px; font-size: 19px; font-weight: 750; letter-spacing: .5px; font-variant-numeric: tabular-nums; }
+    .health-line { display: flex; align-items: center; gap: 9px; }
+    .heart { color: #ff7182; font-size: 15px; }
+    .health-track { width: min(110px, 10vw); height: 5px; overflow: hidden; border-radius: 6px; background: #303744; }
+    .health-fill { width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #ff7182, #ffad7c); transition: width .2s; }
+    .score { color: var(--lime); }
+    .wave { color: var(--cyan); }
+    .hud-actions { display: flex; gap: 7px; }
+    .hud-button { min-width: 38px; height: 36px; border: 1px solid var(--line); border-radius: 9px; background: rgba(255,255,255,.035); color: #cad6e5; font-size: 12px; }
+    .hud-button:hover { border-color: rgba(93, 228, 237, .5); color: var(--cyan); }
+    .arena-wrap { position: relative; background: #101824; }
+    canvas { display: block; width: 100%; aspect-ratio: 16 / 9; cursor: crosshair; touch-action: none; }
+    .overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(7, 11, 17, .63); backdrop-filter: blur(5px); }
+    .overlay.hidden { display: none; }
+    .dialog { width: min(400px, 100%); padding: 28px; border: 1px solid rgba(149, 183, 210, .2); border-radius: 17px; background: rgba(15, 22, 33, .95); text-align: center; box-shadow: 0 24px 80px rgba(0,0,0,.35); }
+    .dialog-kicker { color: var(--cyan); font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+    .dialog h1 { margin: 10px 0 8px; font-size: clamp(26px, 5vw, 38px); letter-spacing: -1.6px; }
+    .dialog p { margin: 0 auto; max-width: 310px; color: #a4b0bf; font-size: 12px; line-height: 1.7; }
+    .primary { width: 100%; margin-top: 22px; padding: 12px 16px; border: 0; border-radius: 10px; background: var(--cyan); color: #081116; font-size: 12px; font-weight: 850; letter-spacing: .6px; }
+    .primary:hover { background: #9af4f6; transform: translateY(-1px); }
+    .controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 19px; margin-top: 16px; color: #8e9bac; font-size: 10px; }
+    kbd { padding: 3px 6px; border: 1px solid rgba(160, 181, 207, .22); border-radius: 5px; background: rgba(255,255,255,.04); color: #d4deeb; font: inherit; }
+    .footline { display: flex; justify-content: space-between; gap: 12px; margin: 12px 3px 0; color: #677589; font-size: 9px; letter-spacing: .3px; }
+    .mobile-controls { display: none; }
+    @media (max-width: 620px) {
+      body { padding: 12px; }
+      .topline { margin-bottom: 10px; }
+      .top-hint { max-width: 140px; font-size: 9px; }
+      .game-frame { border-radius: 13px; }
+      .hud { grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; min-height: 66px; padding: 10px 11px; }
+      .stat-label { font-size: 8px; letter-spacing: 1px; }
+      .stat-value { font-size: 15px; }
+      .health-track { width: 37px; }
+      .hud-button { min-width: 33px; height: 33px; }
+      .footline { font-size: 8px; }
+      .mobile-controls { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin: 12px 3px 0; }
+      .touch-pad { display: grid; grid-template-columns: repeat(3, 38px); grid-template-rows: repeat(2, 34px); gap: 4px; }
+      .touch-key { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.05); color: #dce7f3; touch-action: none; }
+      .touch-key[data-key="KeyW"] { grid-column: 2; }
+      .touch-key[data-key="KeyA"] { grid-column: 1; grid-row: 2; }
+      .touch-key[data-key="KeyS"] { grid-column: 2; grid-row: 2; }
+      .touch-key[data-key="KeyD"] { grid-column: 3; grid-row: 2; }
+      .touch-fire { width: 72px; height: 68px; border: 1px solid rgba(255,152,110,.35); border-radius: 50%; background: rgba(255,152,110,.12); color: var(--orange); font-size: 10px; font-weight: 800; letter-spacing: 1px; touch-action: none; }
+    }
+    @media (hover: none) { canvas { cursor: default; } }
+  </style>
+</head>
+<body>
+  <main class="game-shell">
+    <header class="topline">
+      <div class="brand"><div class="mark">✳</div><div><div class="brand-name">NEON BREACH</div><div class="brand-sub">Arcade training arena</div></div></div>
+      <div class="top-hint">Hold the arena. Keep moving. Have fun.</div>
+    </header>
+    <section class="game-frame" aria-label="Neon Breach arcade game">
+      <div class="hud">
+        <div><div class="stat-label">Pilot integrity</div><div class="health-line"><span class="heart">♥</span><div class="health-track"><div class="health-fill" id="health-fill"></div></div><div class="stat-value" id="health-value">100</div></div></div>
+        <div><div class="stat-label">Signal points</div><div class="stat-value score" id="score-value">00000</div></div>
+        <div><div class="stat-label">Sector</div><div class="stat-value wave" id="wave-value">01</div></div>
+        <div class="hud-actions"><button class="hud-button" id="pause-button" aria-label="Pause game" title="Pause (P)">Ⅱ</button><button class="hud-button" id="sound-button" aria-label="Toggle sound" title="Toggle sound">♫</button></div>
+      </div>
+      <div class="arena-wrap">
+        <canvas id="arena" aria-label="Top-down robot arena game"></canvas>
+        <div class="overlay" id="overlay">
+          <div class="dialog">
+            <div class="dialog-kicker" id="dialog-kicker">Simulation ready</div>
+            <h1 id="dialog-title">Enter the breach.</h1>
+            <p id="dialog-copy">A swarm of rogue training bots is loose in the arena. Dodge, aim, and tag the bots to clear each sector.</p>
+            <button class="primary" id="start-button">START RUN</button>
+            <div class="controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move</span><span><kbd>Mouse</kbd> Aim</span><span><kbd>Click</kbd> Tag</span><span><kbd>P</kbd> Pause</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="mobile-controls" aria-label="Touch controls">
+      <div class="touch-pad">
+        <button class="touch-key" data-key="KeyW" aria-label="Move up">▲</button>
+        <button class="touch-key" data-key="KeyA" aria-label="Move left">◀</button>
+        <button class="touch-key" data-key="KeyS" aria-label="Move down">▼</button>
+        <button class="touch-key" data-key="KeyD" aria-label="Move right">▶</button>
+      </div>
+      <button class="touch-fire" id="touch-fire">TAP<br>TO TAG</button>
+    </div>
+    <footer class="footline"><span>FICTIONAL ARCADE SIMULATION · NO REAL-WORLD WEAPONS</span><span>Best run: <b id="best-score">00000</b></span></footer>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.getElementById("arena");
+      const ctx = canvas.getContext("2d");
+      const overlay = document.getElementById("overlay");
+      const startButton = document.getElementById("start-button");
+      const keys = new Set();
+      const rand = (min, max) => min + Math.random() * (max - min);
+      const game = {
+        running: false, paused: false, over: false, score: 0, health: 100, wave: 1,
+        player: { x: 0, y: 0, radius: 12, angle: 0, invulnerable: 0 },
+        bots: [], shots: [], sparks: [], keys, aim: { x: 0, y: 0 }, firing: false,
+        lastShot: 0, lastTime: 0, spawnTimer: 0, audio: true, audioContext: null,
+        width: 0, height: 0, dpr: 1, frame: 0
+      };
+      const bestKey = "neon-breach-best";
+      let best = Number(localStorage.getItem(bestKey) || 0);
+      document.getElementById("best-score").textContent = String(best).padStart(5, "0");
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        game.dpr = Math.min(window.devicePixelRatio || 1, 2);
+        game.width = Math.max(1, rect.width);
+        game.height = game.width * 9 / 16;
+        canvas.style.height = `${game.height}px`;
+        canvas.width = Math.round(game.width * game.dpr);
+        canvas.height = Math.round(game.height * game.dpr);
+        ctx.setTransform(game.dpr, 0, 0, game.dpr, 0, 0);
+        if (!game.running) {
+          game.player.x = game.width / 2;
+          game.player.y = game.height / 2;
+        }
+        draw();
+      }
+      function sound(frequency = 440, duration = .07, type = "sine", volume = .025) {
+        if (!game.audio) return;
+        try {
+          game.audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = game.audioContext.createOscillator();
+          const gain = game.audioContext.createGain();
+          oscillator.type = type;
+          oscillator.frequency.setValueAtTime(frequency, game.audioContext.currentTime);
+          gain.gain.setValueAtTime(volume, game.audioContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(.001, game.audioContext.currentTime + duration);
+          oscillator.connect(gain).connect(game.audioContext.destination);
+          oscillator.start();
+          oscillator.stop(game.audioContext.currentTime + duration);
+        } catch (error) {
+          game.audio = false;
+          document.getElementById("sound-button").textContent = "×";
+        }
+      }
+      function updateHud() {
+        document.getElementById("health-value").textContent = Math.max(0, Math.ceil(game.health));
+        document.getElementById("health-fill").style.width = `${Math.max(0, game.health)}%`;
+        document.getElementById("score-value").textContent = String(game.score).padStart(5, "0");
+        document.getElementById("wave-value").textContent = String(game.wave).padStart(2, "0");
+      }
+      function addBot() {
+        const side = Math.floor(Math.random() * 4);
+        const pad = 24;
+        const x = side === 0 ? -pad : side === 1 ? game.width + pad : rand(20, game.width - 20);
+        const y = side === 2 ? -pad : side === 3 ? game.height + pad : rand(20, game.height - 20);
+        game.bots.push({ x, y, radius: rand(11, 15), speed: rand(34, 49) + game.wave * 2, phase: rand(0, 6.28), hit: 0 });
+      }
+      function reset() {
+        game.score = 0; game.health = 100; game.wave = 1; game.bots.length = 0;
+        game.shots.length = 0; game.sparks.length = 0; game.spawnTimer = 0;
+        game.player.x = game.width / 2; game.player.y = game.height / 2;
+        game.player.invulnerable = 1.1;
+        for (let i = 0; i < 4; i++) addBot();
+        updateHud();
+      }
+      function start() {
+        reset();
+        game.over = false; game.paused = false; game.running = true;
+        overlay.classList.add("hidden");
+        document.getElementById("pause-button").textContent = "Ⅱ";
+        game.lastTime = performance.now();
+        requestAnimationFrame(loop);
+      }
+      function showOverlay(kicker, title, copy, buttonText) {
+        document.getElementById("dialog-kicker").textContent = kicker;
+        document.getElementById("dialog-title").textContent = title;
+        document.getElementById("dialog-copy").textContent = copy;
+        startButton.textContent = buttonText;
+        overlay.classList.remove("hidden");
+      }
+      function pause() {
+        if (!game.running || game.over) return;
+        game.paused = !game.paused;
+        if (game.paused) {
+          document.getElementById("pause-button").textContent = "▶";
+          showOverlay("Taking a breather", "Run paused.", "Your sector is right where you left it. Jump back in when you're ready.", "RESUME RUN");
+        } else {
+          overlay.classList.add("hidden");
+          document.getElementById("pause-button").textContent = "Ⅱ";
+          game.lastTime = performance.now();
+          requestAnimationFrame(loop);
+        }
+      }
+      function endGame() {
+        game.running = false; game.over = true;
+        if (game.score > best) {
+          best = game.score;
+          localStorage.setItem(bestKey, String(best));
+          document.getElementById("best-score").textContent = String(best).padStart(5, "0");
+        }
+        showOverlay("Run complete", "Nice run, pilot.", `You scored ${game.score} signal points and reached sector ${String(game.wave).padStart(2, "0")}. Ready to jump back in?`, "PLAY AGAIN");
+        sound(180, .35, "triangle", .045);
+      }
+      function pointerPosition(event) {
+        const rect = canvas.getBoundingClientRect();
+        return { x: (event.clientX - rect.left) * (game.width / rect.width), y: (event.clientY - rect.top) * (game.height / rect.height) };
+      }
+      function aimAt(event) {
+        const point = pointerPosition(event);
+        game.aim.x = point.x; game.aim.y = point.y;
+        game.player.angle = Math.atan2(point.y - game.player.y, point.x - game.player.x);
+      }
+      function shoot(now) {
+        if (!game.running || game.paused || now - game.lastShot < 190) return;
+        game.lastShot = now;
+        const p = game.player;
+        game.shots.push({ x: p.x + Math.cos(p.angle) * 17, y: p.y + Math.sin(p.angle) * 17, vx: Math.cos(p.angle) * 470, vy: Math.sin(p.angle) * 470, life: .75 });
+        sound(590, .045, "square", .012);
+      }
+      function burst(x, y, color, count = 8) {
+        for (let i = 0; i < count; i++) {
+          const a = rand(0, Math.PI * 2), speed = rand(35, 140);
+          game.sparks.push({ x, y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, life: rand(.18, .42), max: .42, color });
+        }
+      }
+      function update(dt, now) {
+        const p = game.player;
+        let dx = Number(keys.has("KeyD") || keys.has("ArrowRight")) - Number(keys.has("KeyA") || keys.has("ArrowLeft"));
+        let dy = Number(keys.has("KeyS") || keys.has("ArrowDown")) - Number(keys.has("KeyW") || keys.has("ArrowUp"));
+        const length = Math.hypot(dx, dy) || 1;
+        p.x = Math.max(p.radius, Math.min(game.width - p.radius, p.x + dx / length * 215 * dt));
+        p.y = Math.max(p.radius, Math.min(game.height - p.radius, p.y + dy / length * 215 * dt));
+        p.invulnerable = Math.max(0, p.invulnerable - dt);
+        if (game.firing) shoot(now);
+        game.spawnTimer += dt;
+        if (game.spawnTimer > Math.max(.42, 1.55 - game.wave * .08)) {
+          game.spawnTimer = 0;
+          if (game.bots.length < Math.min(5 + game.wave, 14)) addBot();
+        }
+        const targetsThisWave = 7 + (game.wave - 1) * 4;
+        if (game.score >= targetsThisWave * 100) {
+          game.wave++;
+          updateHud();
+          burst(game.width / 2, game.height / 2, "#5de4ed", 24);
+          sound(740, .22, "sine", .04);
+        }
+        for (let i = game.shots.length - 1; i >= 0; i--) {
+          const shot = game.shots[i];
+          shot.x += shot.vx * dt; shot.y += shot.vy * dt; shot.life -= dt;
+          let hit = false;
+          for (let j = game.bots.length - 1; j >= 0; j--) {
+            const bot = game.bots[j];
+            if (Math.hypot(bot.x - shot.x, bot.y - shot.y) < bot.radius + 4) {
+              game.bots.splice(j, 1); game.score += 100;
+              burst(bot.x, bot.y, "#ff986e", 11); sound(250 + Math.random() * 180, .12, "triangle", .03);
+              hit = true; updateHud(); break;
+            }
+          }
+          if (hit || shot.life <= 0 || shot.x < -20 || shot.x > game.width + 20 || shot.y < -20 || shot.y > game.height + 20) game.shots.splice(i, 1);
+        }
+        for (const bot of game.bots) {
+          bot.phase += dt * 3;
+          const angle = Math.atan2(p.y - bot.y, p.x - bot.x);
+          bot.x += (Math.cos(angle) * bot.speed + Math.cos(bot.phase) * 12) * dt;
+          bot.y += (Math.sin(angle) * bot.speed + Math.sin(bot.phase) * 12) * dt;
+          if (Math.hypot(bot.x - p.x, bot.y - p.y) < bot.radius + p.radius && p.invulnerable <= 0) {
+            game.health -= 18; p.invulnerable = .85; burst(p.x, p.y, "#ff7182", 12); updateHud();
+            sound(125, .15, "sawtooth", .04);
+            if (game.health <= 0) { game.health = 0; updateHud(); endGame(); return; }
+          }
+        }
+        for (let i = game.sparks.length - 1; i >= 0; i--) {
+          const spark = game.sparks[i];
+          spark.x += spark.vx * dt; spark.y += spark.vy * dt; spark.life -= dt;
+          if (spark.life <= 0) game.sparks.splice(i, 1);
+        }
+      }
+      function drawGrid() {
+        const step = 36;
+        ctx.strokeStyle = "rgba(138, 171, 199, .075)";
+        ctx.lineWidth = 1;
+        for (let x = 0; x <= game.width; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, game.height); ctx.stroke(); }
+        for (let y = 0; y <= game.height; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(game.width, y); ctx.stroke(); }
+        ctx.strokeStyle = "rgba(93, 228, 237, .12)";
+        ctx.strokeRect(14, 14, game.width - 28, game.height - 28);
+        ctx.fillStyle = "rgba(93, 228, 237, .38)";
+        const corners = [[14,14,1,1],[game.width-14,14,-1,1],[14,game.height-14,1,-1],[game.width-14,game.height-14,-1,-1]];
+        for (const [x,y,sx,sy] of corners) { ctx.fillRect(x - (sx < 0 ? 8 : 0), y - (sy < 0 ? 2 : 0), 8, 2); ctx.fillRect(x - (sx < 0 ? 2 : 0), y - (sy < 0 ? 8 : 0), 2, 8); }
+      }
+      function drawBot(bot) {
+        ctx.save(); ctx.translate(bot.x, bot.y); ctx.rotate(bot.phase * .25);
+        ctx.shadowBlur = 18; ctx.shadowColor = "#ff986e";
+        ctx.fillStyle = "#472c32"; ctx.strokeStyle = "#ff986e"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(-bot.radius, -bot.radius, bot.radius * 2, bot.radius * 2, 5); ctx.fill(); ctx.stroke();
+        ctx.shadowBlur = 0; ctx.fillStyle = "#ffbd8d";
+        ctx.beginPath(); ctx.arc(-4, -2, 2, 0, Math.PI * 2); ctx.arc(4, -2, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "rgba(255, 152, 110, .75)"; ctx.beginPath(); ctx.moveTo(-4, 5); ctx.lineTo(4, 5); ctx.stroke();
+        ctx.restore();
+      }
+      function drawPlayer() {
+        const p = game.player;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.angle);
+        ctx.globalAlpha = p.invulnerable > 0 && Math.floor(game.frame / 5) % 2 ? .45 : 1;
+        ctx.shadowBlur = 18; ctx.shadowColor = "#5de4ed";
+        ctx.fillStyle = "#173944"; ctx.strokeStyle = "#5de4ed"; ctx.lineWidth = 1.7;
+        ctx.beginPath(); ctx.arc(0, 0, p.radius, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#aaf8f3"; ctx.beginPath(); ctx.arc(3, 0, 4.2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#5de4ed"; ctx.fillRect(7, -2, 12, 4);
+        ctx.restore();
+      }
+      function draw() {
+        if (!ctx || !game.width) return;
+        game.frame++;
+        ctx.clearRect(0, 0, game.width, game.height);
+        const gradient = ctx.createLinearGradient(0, 0, game.width, game.height);
+        gradient.addColorStop(0, "#101b27"); gradient.addColorStop(1, "#111722");
+        ctx.fillStyle = gradient; ctx.fillRect(0, 0, game.width, game.height);
+        drawGrid();
+        for (const shot of game.shots) {
+          ctx.save(); ctx.shadowBlur = 10; ctx.shadowColor = "#c2f279"; ctx.fillStyle = "#c2f279";
+          ctx.beginPath(); ctx.arc(shot.x, shot.y, 3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        }
+        for (const bot of game.bots) drawBot(bot);
+        for (const spark of game.sparks) {
+          ctx.globalAlpha = Math.max(0, spark.life / spark.max);
+          ctx.fillStyle = spark.color; ctx.fillRect(spark.x - 1.5, spark.y - 1.5, 3, 3);
+        }
+        ctx.globalAlpha = 1;
+        drawPlayer();
+        if (!game.running && !game.over) {
+          ctx.fillStyle = "rgba(93, 228, 237, .13)";
+          ctx.beginPath(); ctx.arc(game.width / 2, game.height / 2, 45, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      function loop(now) {
+        if (!game.running || game.paused) return;
+        const dt = Math.min((now - game.lastTime) / 1000, .04);
+        game.lastTime = now;
+        update(dt, now);
+        draw();
+        if (game.running && !game.paused) requestAnimationFrame(loop);
+      }
+      canvas.addEventListener("pointermove", event => aimAt(event));
+      canvas.addEventListener("pointerdown", event => {
+        if (event.button !== undefined && event.button !== 0) return;
+        event.preventDefault(); aimAt(event); game.firing = true;
+        try { canvas.setPointerCapture(event.pointerId); } catch (_) {}
+        shoot(performance.now());
+      });
+      canvas.addEventListener("pointerup", () => { game.firing = false; });
+      canvas.addEventListener("pointercancel", () => { game.firing = false; });
+      canvas.addEventListener("contextmenu", event => event.preventDefault());
+      window.addEventListener("keydown", event => {
+        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code)) event.preventDefault();
+        if (!event.repeat && event.code === "KeyP") pause();
+        keys.add(event.code);
+      });
+      window.addEventListener("keyup", event => keys.delete(event.code));
+      window.addEventListener("blur", () => { keys.clear(); game.firing = false; });
+      startButton.addEventListener("click", () => game.paused ? pause() : start());
+      document.getElementById("pause-button").addEventListener("click", pause);
+      document.getElementById("sound-button").addEventListener("click", event => {
+        game.audio = !game.audio;
+        event.currentTarget.textContent = game.audio ? "♫" : "×";
+        event.currentTarget.setAttribute("aria-label", game.audio ? "Mute sound" : "Enable sound");
+        if (game.audio) sound(620, .08);
+      });
+      document.querySelectorAll(".touch-key").forEach(button => {
+        const code = button.dataset.key;
+        button.addEventListener("pointerdown", event => { event.preventDefault(); keys.add(code); button.setPointerCapture(event.pointerId); });
+        for (const name of ["pointerup", "pointercancel", "lostpointercapture"]) button.addEventListener(name, () => keys.delete(code));
+      });
+      const fireButton = document.getElementById("touch-fire");
+      fireButton.addEventListener("pointerdown", event => { event.preventDefault(); game.aim.x = game.player.x + 1; game.aim.y = game.player.y; game.player.angle = 0; game.firing = true; shoot(performance.now()); });
+      for (const name of ["pointerup", "pointercancel", "lostpointercapture"]) fireButton.addEventListener(name, () => { game.firing = false; });
+      window.addEventListener("resize", resize);
+      resize();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown Previewer</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --panel-alt: #1f2937;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #38bdf8;
+        --border: rgba(148, 163, 184, 0.2);
+        --shadow: rgba(15, 23, 42, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #020817, #0f172a 35%, #111827);
+        color: var(--text);
+      }
+
+      .app {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      h1 {
+        margin: 0 0 1.5rem;
+        font-size: clamp(2rem, 5vw, 3rem);
+        text-align: center;
+        color: #f8fafc;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        min-height: 75vh;
+      }
+
+      .panel {
+        background: rgba(17, 24, 39, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 20px 40px var(--shadow);
+        overflow: hidden;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.9rem 1rem;
+        background: rgba(15, 23, 42, 0.8);
+        border-bottom: 1px solid var(--border);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 70vh;
+        padding: 1rem;
+        border: none;
+        resize: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 1rem;
+        line-height: 1.6;
+        outline: none;
+      }
+
+      #preview {
+        min-height: 70vh;
+        padding: 1.2rem 1.25rem;
+        line-height: 1.7;
+        overflow-wrap: break-word;
+      }
+
+      #preview > :first-child {
+        margin-top: 0;
+      }
+
+      #preview h1,
+      #preview h2,
+      #preview h3,
+      #preview h4,
+      #preview h5,
+      #preview h6 {
+        margin-top: 1.5em;
+        margin-bottom: 0.6em;
+        line-height: 1.2;
+        color: #f8fafc;
+      }
+
+      #preview h1 { font-size: 2.2rem; }
+      #preview h2 { font-size: 1.8rem; }
+      #preview h3 { font-size: 1.45rem; }
+      #preview p,
+      #preview ul,
+      #preview ol,
+      #preview pre,
+      #preview blockquote,
+      #preview table {
+        margin: 0 0 1rem;
+      }
+
+      #preview ul,
+      #preview ol {
+        padding-left: 1.5rem;
+      }
+
+      #preview li + li {
+        margin-top: 0.35rem;
+      }
+
+      #preview a {
+        color: var(--accent);
+      }
+
+      #preview code {
+        background: rgba(148, 163, 184, 0.12);
+        border-radius: 6px;
+        padding: 0.15rem 0.4rem;
+        font-family: Consolas, Monaco, monospace;
+      }
+
+      #preview pre {
+        background: #020817;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        overflow-x: auto;
+      }
+
+      #preview pre code {
+        background: transparent;
+        padding: 0;
+      }
+
+      #preview blockquote {
+        border-left: 4px solid var(--accent);
+        background: rgba(56, 189, 248, 0.08);
+        color: #dbeafe;
+        padding: 0.8rem 1rem;
+        border-radius: 0 12px 12px 0;
+      }
+
+      #preview table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+
+      #preview th,
+      #preview td {
+        border: 1px solid var(--border);
+        padding: 0.75rem;
+        text-align: left;
+      }
+
+      #preview th {
+        background: rgba(148, 163, 184, 0.12);
+      }
+
+      @media (max-width: 900px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+
+        .app {
+          padding: 1rem;
+        }
+
+        textarea,
+        #preview {
+          min-height: 40vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.0/dist/purify.min.js"></script>
+    <script>
+      const h = React.createElement;
+      const initialMarkdown = `# Welcome to my Markdown Previewer
+
+This is a simple markdown previewer made with React.
+
+## Features
+
+- Live preview as you type
+- Inline code like \`const greeting = "Hello";\`
+- A formatted code block:
+
+\`\`\`js
+function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+\`\`\`
+
+> Markdown makes plain text easy to read and format.
+
+Here's a [link to an example](https://example.com).
+
+![A mountain landscape](https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80)
+
+**Bold text** and *italic text* are supported.
+`;
+
+      marked.setOptions({
+        breaks: true,
+        gfm: true,
+      });
+
+      function MarkdownPreviewer() {
+        const [markdown, setMarkdown] = React.useState(initialMarkdown);
+        const html = DOMPurify.sanitize(marked.parse(markdown));
+
+        return h('main', { className: 'app' },
+          h('h1', null, 'Markdown Previewer'),
+          h('div', { className: 'workspace' },
+            h('section', { className: 'panel' },
+              h('div', { className: 'panel-header' }, h('span', null, 'Editor')),
+              h('textarea', {
+                id: 'editor',
+                'aria-label': 'Markdown editor',
+                value: markdown,
+                onChange: (event) => setMarkdown(event.target.value),
+              })
+            ),
+            h('section', { className: 'panel' },
+              h('div', { className: 'panel-header' }, h('span', null, 'Preview')),
+              h('div', {
+                id: 'preview',
+                'aria-live': 'polite',
+                dangerouslySetInnerHTML: { __html: html },
+              })
+            )
+          )
+        );
+      }
+
+      ReactDOM.render(h(MarkdownPreviewer), document.getElementById('root'));
+    </script>
+  </body>
+</html>

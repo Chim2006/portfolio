@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11131d">
+  <title>25 + 5 Clock</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #11131d;
+      color: #f6f4ff;
+      font-synthesis: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: grid;
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      place-items: center;
+      background:
+        radial-gradient(ellipse at 50% 15%, rgb(120 97 211 / 19%), transparent 48%),
+        #11131d;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
+    .app {
+      width: min(100%, 620px);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 38px;
+      font-size: clamp(2.4rem, 8vw, 4rem);
+      font-weight: 750;
+      letter-spacing: -0.06em;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .setting {
+      padding: 20px 16px;
+      border: 1px solid rgb(255 255 255 / 8%);
+      border-radius: 22px;
+      background: rgb(28 31 45 / 88%);
+    }
+
+    .setting h2 {
+      margin: 0 0 14px;
+      color: #c8c4da;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .setting-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .length {
+      min-width: 2ch;
+      font-size: 2rem;
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+
+    .adjust {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      place-items: center;
+      border: 1px solid rgb(255 255 255 / 10%);
+      border-radius: 12px;
+      background: #292d40;
+      color: #c9bcff;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background 140ms ease, transform 140ms ease;
+    }
+
+    .adjust:hover:not(:disabled) {
+      background: #393450;
+    }
+
+    button:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    button:focus-visible {
+      outline: 2px solid #b9a9ff;
+      outline-offset: 3px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
+    .timer {
+      position: relative;
+      display: grid;
+      width: min(100%, 340px);
+      aspect-ratio: 1;
+      margin: 0 auto 24px;
+      padding: 14px;
+      place-items: center;
+      border: 1px solid rgb(255 255 255 / 9%);
+      border-radius: 50%;
+      background: linear-gradient(145deg, #24283a, #191c29);
+      box-shadow: 0 25px 75px rgb(0 0 0 / 34%), inset 0 1px rgb(255 255 255 / 5%);
+    }
+
+    .timer::before {
+      position: absolute;
+      inset: 9px;
+      border: 1px solid rgb(255 255 255 / 6%);
+      border-radius: inherit;
+      content: "";
+    }
+
+    .timer-content {
+      position: relative;
+    }
+
+    .timer h2 {
+      margin: 0 0 8px;
+      color: #bdb5e1;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #time-left {
+      font-size: clamp(4.5rem, 18vw, 6.5rem);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      letter-spacing: -0.07em;
+      line-height: 1;
+    }
+
+    .timer.running .timer-content {
+      animation: breathe 3s ease-in-out infinite;
+    }
+
+    .timer.break {
+      background: linear-gradient(145deg, #203b39, #192b2c);
+    }
+
+    .timer.break h2 {
+      color: #a9ded1;
+    }
+
+    .timer.finished #time-left {
+      color: #ffaaa9;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .action {
+      min-width: 132px;
+      padding: 14px 20px;
+      border: 0;
+      border-radius: 15px;
+      background: #7866d3;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 650;
+      transition: background 140ms ease, transform 140ms ease;
+    }
+
+    .action:hover {
+      background: #8977e4;
+    }
+
+    .action.secondary {
+      border: 1px solid rgb(255 255 255 / 10%);
+      background: #292d40;
+      color: #d6d3e4;
+    }
+
+    .action.secondary:hover {
+      background: #373c50;
+    }
+
+    .hint {
+      margin: 22px 0 0;
+      color: #858ba0;
+      font-size: 0.85rem;
+    }
+
+    @keyframes breathe {
+      50% { opacity: 0.75; }
+    }
+
+    @media (max-width: 480px) {
+      .settings {
+        gap: 10px;
+      }
+
+      .setting {
+        padding: 16px 10px;
+      }
+
+      .setting-controls {
+        gap: 12px;
+      }
+
+      .timer {
+        width: min(100%, 300px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>25 + 5 Clock</h1>
+
+    <section class="settings" aria-label="Timer settings">
+      <div class="setting">
+        <h2 id="break-label">Break Length</h2>
+        <div class="setting-controls">
+          <button class="adjust" id="break-decrement" type="button" aria-label="Decrease break length">−</button>
+          <span class="length" id="break-length">5</span>
+          <button class="adjust" id="break-increment" type="button" aria-label="Increase break length">+</button>
+        </div>
+      </div>
+      <div class="setting">
+        <h2 id="session-label">Session Length</h2>
+        <div class="setting-controls">
+          <button class="adjust" id="session-decrement" type="button" aria-label="Decrease session length">−</button>
+          <span class="length" id="session-length">25</span>
+          <button class="adjust" id="session-increment" type="button" aria-label="Increase session length">+</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="timer" id="timer" aria-label="Countdown timer">
+      <div class="timer-content">
+        <h2 id="timer-label">Session</h2>
+        <div id="time-left" role="timer" aria-live="off">25:00</div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button class="action" id="start_stop" type="button" aria-label="Start timer">Start</button>
+      <button class="action secondary" id="reset" type="button">Reset</button>
+    </div>
+    <p class="hint" id="status" aria-live="polite">Ready when you are.</p>
+    <audio id="beep" preload="auto"></audio>
+  </main>
+
+  <script>
+    const breakLengthDisplay = document.querySelector("#break-length");
+    const sessionLengthDisplay = document.querySelector("#session-length");
+    const timer = document.querySelector("#timer");
+    const timerLabel = document.querySelector("#timer-label");
+    const timeLeftDisplay = document.querySelector("#time-left");
+    const startStopButton = document.querySelector("#start_stop");
+    const resetButton = document.querySelector("#reset");
+    const statusDisplay = document.querySelector("#status");
+    const beep = document.querySelector("#beep");
+
+    let breakLength = 5;
+    let sessionLength = 25;
+    let remainingSeconds = sessionLength * 60;
+    let currentPeriod = "Session";
+    let intervalId = null;
+    let deadline = null;
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainder = seconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
+    }
+
+    function render() {
+      breakLengthDisplay.textContent = String(breakLength);
+      sessionLengthDisplay.textContent = String(sessionLength);
+      timerLabel.textContent = currentPeriod;
+      timeLeftDisplay.textContent = formatTime(remainingSeconds);
+      timer.classList.toggle("break", currentPeriod === "Break");
+      timer.classList.toggle("running", intervalId !== null);
+      timer.classList.toggle("finished", remainingSeconds === 0);
+
+      document.querySelectorAll(".adjust").forEach((button) => {
+        button.disabled = intervalId !== null;
+      });
+      startStopButton.textContent = intervalId === null ? "Start" : "Pause";
+      startStopButton.setAttribute(
+        "aria-label",
+        intervalId === null ? "Start timer" : "Pause timer"
+      );
+    }
+
+    function playBeep() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.value = 880;
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.25, audioContext.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.8);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.8);
+        oscillator.addEventListener("ended", () => audioContext.close(), { once: true });
+      } catch (error) {
+        statusDisplay.textContent = "Timer changed. Audio alert is unavailable in this browser.";
+      }
+    }
+
+    function finishPeriod() {
+      playBeep();
+      currentPeriod = currentPeriod === "Session" ? "Break" : "Session";
+      remainingSeconds = (currentPeriod === "Session" ? sessionLength : breakLength) * 60;
+      deadline = Date.now() + remainingSeconds * 1000;
+      statusDisplay.textContent = `${currentPeriod} started.`;
+      render();
+    }
+
+    function tick() {
+      remainingSeconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      if (remainingSeconds === 0) {
+        finishPeriod();
+        return;
+      }
+      render();
+    }
+
+    function toggleTimer() {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+        deadline = null;
+        statusDisplay.textContent = "Timer paused.";
+      } else {
+        deadline = Date.now() + remainingSeconds * 1000;
+        intervalId = window.setInterval(tick, 200);
+        statusDisplay.textContent = `${currentPeriod} in progress.`;
+      }
+      render();
+    }
+
+    function resetTimer() {
+      if (intervalId !== null) clearInterval(intervalId);
+      intervalId = null;
+      deadline = null;
+      breakLength = 5;
+      sessionLength = 25;
+      remainingSeconds = 25 * 60;
+      currentPeriod = "Session";
+      beep.pause();
+      beep.currentTime = 0;
+      statusDisplay.textContent = "Timer reset.";
+      render();
+    }
+
+    function adjustLength(kind, amount) {
+      if (intervalId !== null) return;
+      if (kind === "break") {
+        breakLength = Math.min(60, Math.max(1, breakLength + amount));
+      } else {
+        sessionLength = Math.min(60, Math.max(1, sessionLength + amount));
+        if (currentPeriod === "Session") {
+          remainingSeconds = sessionLength * 60;
+        }
+      }
+      statusDisplay.textContent = "Timer length updated.";
+      render();
+    }
+
+    document.querySelector("#break-decrement").addEventListener("click", () => adjustLength("break", -1));
+    document.querySelector("#break-increment").addEventListener("click", () => adjustLength("break", 1));
+    document.querySelector("#session-decrement").addEventListener("click", () => adjustLength("session", -1));
+    document.querySelector("#session-increment").addEventListener("click", () => adjustLength("session", 1));
+    startStopButton.addEventListener("click", toggleTimer);
+    resetButton.addEventListener("click", resetTimer);
+
+    render();
+  </script>
+</body>
+</html>

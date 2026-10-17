@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LUNE MODE | Fashion</title>
+    <meta
+      name="description"
+      content="Luxury fashion boutique featuring modern essentials, statement looks, and elevated everyday style."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f8f3ee;
+        --bg-2: #efe5df;
+        --panel: rgba(255, 255, 255, 0.7);
+        --text: #171312;
+        --muted: #6d5d59;
+        --accent: #b97b5d;
+        --accent-dark: #7a4c37;
+        --gold: #c9a66b;
+        --line: rgba(23, 19, 18, 0.08);
+        --shadow: 0 24px 64px rgba(33, 19, 15, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(180deg, #f4eee9 0%, #f9f4f1 100%);
+        color: var(--text);
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(14px);
+        background: rgba(248, 243, 238, 0.8);
+        border-bottom: 1px solid rgba(23, 19, 18, 0.04);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 76px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        letter-spacing: 0.28rem;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #201917, #a6745b);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        font-size: 0.8rem;
+        letter-spacing: 0.12rem;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .nav-links a {
+        position: relative;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -8px;
+        width: 100%;
+        height: 1px;
+        background: var(--text);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.2s ease;
+      }
+
+      .nav-links a:hover::after {
+        transform: scaleX(1);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .icon-button {
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.4);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--text);
+        font-size: 1rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 16px 28px;
+        border-radius: 999px;
+        border: 1px solid var(--text);
+        font-size: 0.74rem;
+        letter-spacing: 0.14rem;
+        text-transform: uppercase;
+        background: transparent;
+        color: var(--text);
+        transition: all 0.25s ease;
+        cursor: pointer;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(23, 19, 18, 0.08);
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: #fff;
+        border-color: transparent;
+      }
+
+      .hero {
+        padding: 52px 0 36px;
+      }
+
+      .hero-inner {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: rgba(185, 123, 93, 0.12);
+        color: var(--accent-dark);
+        font-size: 0.7rem;
+        letter-spacing: 0.16rem;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      h1, h2, h3 {
+        margin: 0;
+        font-family: 'Cormorant Garamond', serif;
+        font-weight: 600;
+        line-height: 0.95;
+      }
+
+      .hero-copy h1 {
+        margin-top: 18px;
+        font-size: clamp(4rem, 6vw, 7rem);
+        letter-spacing: -0.06em;
+      }
+
+      .hero-copy p {
+        margin: 22px 0 26px;
+        max-width: 560px;
+        color: var(--muted);
+        font-size: 1.02rem;
+        line-height: 1.8;
+      }
+
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 30px;
+        max-width: 520px;
+      }
+
+      .stat {
+        padding: 18px 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255,255,255,0.35);
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 1.8rem;
+        font-family: 'Cormorant Garamond', serif;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 0.75rem;
+        letter-spacing: 0.1rem;
+        text-transform: uppercase;
+      }
+
+      .hero-visual {
+        position: relative;
+      }
+
+      .visual-card {
+        position: relative;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .main-image {
+        height: 640px;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .floating-tag {
+        position: absolute;
+        background: rgba(255,255,255,0.82);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(23, 19, 18, 0.06);
+        border-radius: 18px;
+        padding: 18px 20px;
+        box-shadow: 0 18px 40px rgba(23, 19, 18, 0.1);
+      }
+
+      .floating-tag.top {
+        top: 28px;
+        left: -26px;
+      }
+
+      .floating-tag.bottom {
+        right: -18px;
+        bottom: 34px;
+      }
+
+      .mini-label {
+        display: block;
+        font-size: 0.72rem;
+        letter-spacing: 0.17rem;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      .price {
+        font-size: 2.1rem;
+        font-family: 'Cormorant Garamond', serif;
+      }
+
+      .section {
+        padding: 72px 0;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(2.8rem, 4vw, 4.3rem);
+        letter-spacing: -0.06em;
+      }
+
+      .section-head p {
+        max-width: 460px;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .collections {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .collection-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        min-height: 420px;
+        box-shadow: var(--shadow);
+      }
+
+      .collection-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(19,14,13,0.1), rgba(19,14,13,0.68));
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 26px;
+        color: #fff;
+      }
+
+      .overlay small {
+        letter-spacing: 0.12rem;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+
+      .overlay h3 {
+        margin-top: 8px;
+        font-size: clamp(2.2rem, 3vw, 3rem);
+        line-height: 0.95;
+      }
+
+      .products {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .product-card {
+        background: rgba(255,255,255,0.5);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        overflow: hidden;
+      }
+
+      .product-image {
+        position: relative;
+        height: 320px;
+        overflow: hidden;
+      }
+
+      .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s ease;
+      }
+
+      .product-card:hover .product-image img {
+        transform: scale(1.04);
+      }
+
+      .wishlist {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(23,19,18,0.06);
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+      }
+
+      .product-info {
+        padding: 18px 18px 20px;
+      }
+
+      .product-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .tag {
+        font-size: 0.68rem;
+        letter-spacing: 0.12rem;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .product-name {
+        font-size: 1.45rem;
+        font-family: 'Cormorant Garamond', serif;
+        margin-bottom: 8px;
+      }
+
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .product-price {
+        font-weight: 700;
+      }
+
+      .rating {
+        color: var(--gold);
+        letter-spacing: 0.06rem;
+      }
+
+      .story {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        align-items: center;
+        background: linear-gradient(135deg, rgba(240, 230, 224, 0.7), rgba(255,255,255,0.6));
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .story-image {
+        min-height: 540px;
+        background: url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      }
+
+      .story-copy {
+        padding: 54px 42px;
+      }
+
+      .story-copy .eyebrow {
+        background: rgba(201,166,107,0.12);
+        color: #876a39;
+      }
+
+      .story-copy h2 {
+        font-size: clamp(2.6rem, 5vw, 4rem);
+        letter-spacing: -0.06em;
+        margin-top: 18px;
+      }
+
+      .story-copy p {
+        color: var(--muted);
+        line-height: 1.9;
+        margin: 20px 0 28px;
+      }
+
+      .quote {
+        padding: 18px 20px;
+        border-left: 3px solid var(--gold);
+        background: rgba(255,255,255,0.4);
+        border-radius: 0 18px 18px 0;
+        font-size: 1.08rem;
+        color: var(--text);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.7rem;
+      }
+
+      .newsletter {
+        padding: 28px;
+        background: linear-gradient(135deg, #271d1a, #3d2c28);
+        border-radius: 28px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .newsletter h3 {
+        font-size: clamp(2.3rem, 4vw, 3.8rem);
+        letter-spacing: -0.04em;
+      }
+
+      .newsletter p {
+        color: rgba(255,255,255,0.72);
+        margin-top: 8px;
+        line-height: 1.7;
+      }
+
+      .subscribe {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: min(500px, 100%);
+      }
+
+      .subscribe input {
+        flex: 1;
+        height: 58px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.06);
+        color: #fff;
+        padding: 0 20px;
+        font-size: 0.95rem;
+        outline: none;
+      }
+
+      .subscribe input::placeholder {
+        color: rgba(255,255,255,0.56);
+      }
+
+      footer {
+        padding: 36px 0 80px;
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        border-top: 1px solid var(--line);
+        padding-top: 28px;
+        color: var(--muted);
+      }
+
+      .footer-menu {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 0.76rem;
+        letter-spacing: 0.12rem;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 980px) {
+        .hero-inner,
+        .story,
+        .newsletter {
+          grid-template-columns: 1fr;
+          display: grid;
+        }
+
+        .collections,
+        .products {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .nav-links {
+          display: none;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .hero-copy h1 {
+          font-size: 3.5rem;
+        }
+
+        .hero-stats,
+        .collections,
+        .products {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          display: block;
+        }
+
+        .subscribe {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .subscribe input,
+        .subscribe button {
+          width: 100%;
+        }
+
+        .floating-tag.top {
+          left: 18px;
+        }
+
+        .floating-tag.bottom {
+          right: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <div class="brand" aria-label="Lune Mode home">
+          <span class="brand-mark">L</span>
+          <span>Lune Mode</span>
+        </div>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#new">New In</a>
+          <a href="#shop">Shop</a>
+          <a href="#collections">Collections</a>
+          <a href="#journal">Journal</a>
+          <a href="#about">About</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="icon-button" aria-label="Search">⌕</button>
+          <button class="icon-button" aria-label="Favorite">♡</button>
+          <button class="button primary">Bag (2)</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <span class="eyebrow">Curated for modern style</span>
+            <h1>Elegance in motion.</h1>
+            <p>
+              Discover refined essentials designed for confident everyday living.
+              Each silhouette is made to move beautifully from daylight strolls to
+              evening events.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#shop">Shop the edit</a>
+              <a class="button" href="#collections">View collections</a>
+            </div>
+
+            <div class="hero-stats" aria-label="Brand statistics">
+              <div class="stat">
+                <strong>150k+</strong>
+                <span>happy clients</span>
+              </div>
+              <div class="stat">
+                <strong>40+</strong>
+                <span>new arrivals</span>
+              </div>
+              <div class="stat">
+                <strong>4.9</strong>
+                <span>average rating</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="Featured product image">
+            <div class="visual-card">
+              <img
+                class="main-image"
+                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80"
+                alt="Woman styling a neutral outfit"
+              />
+            </div>
+
+            <div class="floating-tag top">
+              <span class="mini-label">Featured</span>
+              <div class="price">$240</div>
+            </div>
+
+            <div class="floating-tag bottom">
+              <span class="mini-label">New drop</span>
+              <div class="price">Autumn 24</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="collections">
+        <div class="container">
+          <div class="section-head">
+            <h2>Curated collections</h2>
+            <p>
+              Thoughtful layers, rich textures, and timeless tailoring for every moment
+              in your wardrobe.
+            </p>
+          </div>
+
+          <div class="collections">
+            <article class="collection-card">
+              <img
+                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80"
+                alt="Woman in a beige jacket"
+              />
+              <div class="overlay">
+                <small>Minimal</small>
+                <h3>Soft tailoring</h3>
+              </div>
+            </article>
+
+            <article class="collection-card">
+              <img
+                src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80"
+                alt="Woman in a chic evening dress"
+              />
+              <div class="overlay">
+                <small>Occasion</small>
+                <h3>After dark</h3>
+              </div>
+            </article>
+
+            <article class="collection-card">
+              <img
+                src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80"
+                alt="Woman in a warm outfit"
+              />
+              <div class="overlay">
+                <small>Essentials</small>
+                <h3>Weekend layers</h3>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="shop">
+        <div class="container">
+          <div class="section-head">
+            <h2>Best sellers</h2>
+            <a class="button" href="#">Shop all</a>
+          </div>
+
+          <div class="products">
+            <article class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80" alt="Ivory dress" />
+                <span class="wishlist">♡</span>
+              </div>
+              <div class="product-info">
+                <div class="product-meta">
+                  <span class="tag">Dress</span>
+                  <span class="rating">★★★★★</span>
+                </div>
+                <div class="product-name">Ivory Muse</div>
+                <div class="price-row">
+                  <span class="product-price">$180</span>
+                  <span class="tag">New</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=80" alt="Neutral knit set" />
+                <span class="wishlist">♡</span>
+              </div>
+              <div class="product-info">
+                <div class="product-meta">
+                  <span class="tag">Set</span>
+                  <span class="rating">★★★★★</span>
+                </div>
+                <div class="product-name">Aster Knit</div>
+                <div class="price-row">
+                  <span class="product-price">$210</span>
+                  <span class="tag">Bestseller</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=700&q=80" alt="Tailored blazer" />
+                <span class="wishlist">♡</span>
+              </div>
+              <div class="product-info">
+                <div class="product-meta">
+                  <span class="tag">Blazer</span>
+                  <span class="rating">★★★★★</span>
+                </div>
+                <div class="product-name">Noir Frame</div>
+                <div class="price-row">
+                  <span class="product-price">$260</span>
+                  <span class="tag">Limited</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" alt="Leather tote bag" />
+                <span class="wishlist">♡</span>
+              </div>
+              <div class="product-info">
+                <div class="product-meta">
+                  <span class="tag">Accessories</span>
+                  <span class="rating">★★★★★</span>
+                </div>
+                <div class="product-name">Velvet Tote</div>
+                <div class="price-row">
+                  <span class="product-price">$145</span>
+                  <span class="tag">Popular</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container">
+          <div class="story">
+            <div class="story-image" aria-label="Fashion studio portrait"></div>
+            <div class="story-copy">
+              <span class="eyebrow">Our story</span>
+              <h2>Designed for a life well dressed.</h2>
+              <p>
+                Lune Mode was born from the idea that style should feel luxurious,
+                effortless, and personal. We design statement pieces that blend classic
+                silhouettes with a modern point of view—crafted to be worn, loved, and
+                reimagined through every season.
+              </p>
+              <div class="quote">“Style is a form of expression, and we make it feel easy.”</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="journal">
+        <div class="container">
+          <div class="newsletter">
+            <div>
+              <h3>Join the Lune list.</h3>
+              <p>Receive exclusive drops, styling notes, and private offers before everyone else.</p>
+            </div>
+
+            <form class="subscribe" action="#" method="post">
+              <input type="email" placeholder="Your email address" aria-label="Your email address" />
+              <button class="button primary" type="submit">Sign up</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-inner">
+        <div class="brand" aria-label="Lune Mode footer logo">
+          <span class="brand-mark">L</span>
+          <span>Lune Mode</span>
+        </div>
+
+        <div class="footer-menu">
+          <a href="#">Instagram</a>
+          <a href="#">Pinterest</a>
+          <a href="#">Shipping</a>
+          <a href="#">Returns</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

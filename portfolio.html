@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Loretta Lawrence is a front-end and interactive web developer building responsive web applications and canvas games."
+    />
+    <title>Loretta Lawrence | Front-End &amp; Interactive Web Developer</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        color: #f5f3ef;
+        background: #11110f;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        --muted: #aaa8a1;
+        --accent: #c8f169;
+        --panel: #191a17;
+        --line: rgba(245, 243, 239, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        background:
+          radial-gradient(ellipse at 85% 10%, rgba(124, 151, 72, 0.13), transparent 35rem),
+          #11110f;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+
+      .site-header {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav {
+        display: flex;
+        min-height: 76px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .wordmark {
+        color: var(--accent);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.13em;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 26px;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        font-size: 0.86rem;
+        text-decoration: none;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus-visible {
+        color: var(--accent);
+      }
+
+      .hero {
+        display: grid;
+        min-height: 560px;
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: center;
+        gap: 48px;
+        padding-block: 76px;
+      }
+
+      .eyebrow {
+        margin: 0 0 18px;
+        color: var(--accent);
+        font-size: 0.76rem;
+        font-weight: 750;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin-bottom: 24px;
+        font-size: clamp(3rem, 7vw, 5.6rem);
+        letter-spacing: -0.085em;
+        line-height: 0.98;
+      }
+
+      h1 span {
+        display: block;
+        color: var(--accent);
+        font-size: clamp(1.55rem, 4vw, 2.6rem);
+        letter-spacing: -0.045em;
+        line-height: 1.12;
+      }
+
+      .hero-copy {
+        max-width: 600px;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.8;
+      }
+
+      .hero-links,
+      .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+
+      .hero-links {
+        margin-top: 20px;
+      }
+
+      .hero-links a {
+        color: var(--accent);
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-underline-offset: 4px;
+      }
+
+      .tech-stack {
+        margin-top: 22px;
+      }
+
+      .tech-stack span,
+      .project-stack li {
+        padding: 7px 11px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: #deddd7;
+        font-size: 0.75rem;
+        font-weight: 650;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 20px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: #f5f3ef;
+        font-size: 0.88rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button.primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #171910;
+      }
+
+      .button.primary:hover {
+        background: #d8ff88;
+      }
+
+      .hero-note {
+        justify-self: end;
+        width: min(100%, 330px);
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: linear-gradient(145deg, #20211d, #161714);
+      }
+
+      .hero-note .initials {
+        display: grid;
+        width: 74px;
+        height: 74px;
+        margin-bottom: 30px;
+        place-items: center;
+        border: 1px solid rgba(200, 241, 105, 0.5);
+        border-radius: 50%;
+        color: var(--accent);
+        font-size: 1.45rem;
+        font-weight: 800;
+      }
+
+      .hero-note h2 {
+        margin-bottom: 10px;
+        font-size: 1.35rem;
+      }
+
+      .hero-note p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.7;
+      }
+
+      .section {
+        padding-block: 74px;
+        border-top: 1px solid var(--line);
+      }
+
+      .section-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 30px;
+      }
+
+      .section-heading h2 {
+        margin-bottom: 0;
+        font-size: clamp(2.25rem, 5vw, 4rem);
+        letter-spacing: -0.065em;
+      }
+
+      .section-heading p {
+        max-width: 370px;
+        margin-bottom: 4px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .projects {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .project {
+        display: flex;
+        min-height: 330px;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 25px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--panel);
+        transition: border-color 180ms ease, transform 180ms ease;
+      }
+
+      .project:hover {
+        transform: translateY(-3px);
+        border-color: rgba(200, 241, 105, 0.45);
+      }
+
+      .project-type {
+        margin-bottom: 26px;
+        color: var(--accent);
+        font-size: 0.7rem;
+        font-weight: 750;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .project h3 {
+        margin-bottom: 12px;
+        font-size: 1.3rem;
+        letter-spacing: -0.025em;
+      }
+
+      .project-description {
+        margin-bottom: 16px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+
+      .project-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin: 0 0 18px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .project-stack li {
+        padding: 6px 9px;
+        font-size: 0.7rem;
+      }
+
+      .project-group-heading {
+        margin: 48px 0 18px;
+      }
+
+      .project-group-heading h3 {
+        margin-bottom: 0;
+        font-size: 1.7rem;
+        letter-spacing: -0.04em;
+      }
+
+      .project-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: auto;
+        padding-top: 18px;
+      }
+
+      .project-link {
+        display: inline-flex;
+        min-height: 40px;
+        align-items: center;
+        gap: 8px;
+        padding: 0 13px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 650;
+        text-decoration: none;
+      }
+
+      .project-link:hover {
+        color: var(--accent);
+      }
+
+      .project-link span {
+        color: var(--accent);
+      }
+
+      .certifications {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .certificate {
+        padding: 26px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--panel);
+      }
+
+      .certificate-number {
+        display: inline-grid;
+        width: 34px;
+        height: 34px;
+        margin-bottom: 22px;
+        place-items: center;
+        border-radius: 50%;
+        background: rgba(200, 241, 105, 0.12);
+        color: var(--accent);
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .certificate h3 {
+        margin-bottom: 12px;
+        font-size: 1.25rem;
+        line-height: 1.4;
+      }
+
+      .certificate-note {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.7;
+      }
+
+      .certificate-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+      }
+
+      .certificate-links a {
+        color: var(--muted);
+        font-size: 0.86rem;
+        text-decoration-color: rgba(200, 241, 105, 0.5);
+        text-underline-offset: 4px;
+      }
+
+      .certificate-links a:hover {
+        color: var(--accent);
+      }
+
+      .footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-block: 26px 36px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .footer p {
+        margin-bottom: 0;
+      }
+
+      .footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      @media (max-width: 720px) {
+        .nav {
+          align-items: flex-start;
+          flex-direction: column;
+          justify-content: center;
+          padding-block: 18px;
+        }
+
+        .nav-links {
+          gap: 12px 20px;
+        }
+
+        .hero {
+          min-height: auto;
+          grid-template-columns: 1fr;
+          gap: 34px;
+          padding-block: 64px;
+        }
+
+        .hero-note {
+          justify-self: start;
+        }
+
+        .section {
+          padding-block: 56px;
+        }
+
+        .section-heading {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 540px) {
+        .wrap {
+          width: min(100% - 28px, 1120px);
+        }
+
+        .projects,
+        .certifications {
+          grid-template-columns: 1fr;
+        }
+
+        .project {
+          min-height: 300px;
+        }
+
+        .footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media print {
+        @page {
+          size: letter;
+          margin: 0.5in;
+        }
+
+        body {
+          min-width: 0;
+          background: #fff;
+          color: #171910;
+          print-color-adjust: exact;
+        }
+
+        .site-header,
+        .hero-actions,
+        .project-actions,
+        .footer {
+          display: none;
+        }
+
+        .wrap {
+          width: 100%;
+        }
+
+        .hero {
+          min-height: 0;
+          grid-template-columns: 1fr;
+          padding-block: 0 20px;
+        }
+
+        .hero-note {
+          display: none;
+        }
+
+        h1 {
+          font-size: 30pt;
+        }
+
+        h1 span,
+        .eyebrow,
+        .project-type,
+        .certificate-number {
+          color: #527d35;
+        }
+
+        h1 span {
+          font-size: 14pt;
+        }
+
+        .hero-copy,
+        .section-heading p,
+        .project-description,
+        .project-stack li,
+        .certificate-note,
+        .project-link {
+          color: #444;
+        }
+
+        .section {
+          padding-block: 18px;
+          border-color: #aaa;
+        }
+
+        .section-heading {
+          margin-bottom: 14px;
+        }
+
+        .section-heading h2 {
+          font-size: 24pt;
+        }
+
+        .projects {
+          gap: 10px;
+        }
+
+        .project {
+          min-height: 0;
+          padding: 13px;
+          border-color: #ccc;
+          border-radius: 6px;
+          background: #fff;
+          break-inside: avoid;
+        }
+
+        .project-type {
+          margin-bottom: 8px;
+        }
+
+        .project-group-heading {
+          margin: 18px 0 10px;
+          break-after: avoid;
+        }
+
+        .tech-stack span,
+        .project-stack li {
+          border-color: #ccc;
+          color: #333;
+        }
+
+        .certificate {
+          padding: 14px;
+          border-color: #ccc;
+          background: #fff;
+          break-inside: avoid;
+        }
+
+        .certificate-links a {
+          color: #333;
+        }
+
+        a {
+          text-decoration: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav wrap" aria-label="Main navigation">
+        <a class="wordmark" href="#home">Loretta Lawrence</a>
+        <div class="nav-links">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#certificates">Certificates</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero wrap" id="home">
+        <div>
+          <p class="eyebrow">Remote-ready developer</p>
+          <h1>Loretta Lawrence <span>Front-End &amp; Interactive Web Developer</span></h1>
+          <p class="hero-copy" id="about">
+            Hi, I'm Loretta. I build fast, clean, and highly responsive web
+            applications and interactive digital experiences. I specialize in
+            merging traditional front-end code with cutting-edge generative AI
+            workflows. Fully equipped for remote execution, cross-time-zone
+            collaboration, and autonomous version-control management. Let's
+            build something exceptional together.
+          </p>
+          <div class="hero-links" aria-label="Professional profiles">
+            <a href="https://github.com/Chim2006" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            <a href="https://www.linkedin.com/in/loretta-lawrence-61a141235/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          </div>
+          <div class="tech-stack" aria-label="Core technologies">
+            <span>HTML5</span>
+            <span>CSS3</span>
+            <span>JavaScript</span>
+            <span>React</span>
+            <span>Git</span>
+            <span>Canvas API</span>
+          </div>
+          <div class="hero-actions">
+            <a
+              class="button primary"
+              href="#projects"
+            >
+              Explore Projects
+            </a>
+            <a class="button" href="Loretta-Lawrence-CV.pdf" download="Loretta-Lawrence-CV.pdf">
+              Download CV (PDF)
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero-note" aria-label="About Loretta">
+          <div class="initials" aria-hidden="true">LL</div>
+          <h2>Front-end, built with care.</h2>
+          <p>
+            A collection of responsive web applications and interactive game
+            projects, built for clear interfaces and engaging experiences.
+          </p>
+        </aside>
+      </section>
+
+      <section class="section" id="projects">
+        <div class="wrap">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Selected work</p>
+              <h2>Projects</h2>
+            </div>
+            <p>Engineering with precision and intent. A comprehensive collection of production-ready web applications, complex React state systems, and interactive canvas games.</p>
+          </div>
+
+          <div class="projects">
+            <article class="project">
+              <p class="project-type">Productivity App</p>
+              <h3>Daylight Task Planner</h3>
+              <p class="project-description">A clean, responsive productivity dashboard engineered to streamline daily task scheduling. Focuses on fluid responsive layouts, interactive user states, and layout persistence across breakpoints.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>React.js</li><li>State Management</li><li>CSS Grid</li><li>UI/UX Architecture</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="designapp.html" target="_blank" rel="noopener noreferrer">Open project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/designapp.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="project-group-heading">
+            <p class="eyebrow">Game development</p>
+            <h3>Interactive &amp; WebGL Games</h3>
+          </div>
+          <div class="projects">
+            <article class="project">
+              <p class="project-type">Arcade Game</p>
+              <h3>Neon Breach</h3>
+              <p class="project-description">A fast-paced arcade game built entirely from scratch without external engine dependencies. Features high-performance coordinate-based rendering loops, custom collision detection algorithms, and tight input state-tracking.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>Vanilla JavaScript</li><li>HTML5 Canvas API</li><li>Mathematical Logic</li><li>60FPS Game Loop</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="game.html" target="_blank" rel="noopener noreferrer">Play game <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/game.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="project">
+              <p class="project-type">Arcade Game</p>
+              <h3>Monster Duty</h3>
+              <p class="project-description">An interactive web-based game deployed within the RUN.world Studio ecosystem. Developed utilizing advanced prompt engineering workflows and generative asset pipelines to rapidly build, test, and deploy interactive gameplay loops.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>Run World Studio</li><li>Generative Engineering</li><li>Rapid Prototyping</li><li>Interactive Assets</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="https://run.world/sharpflare446/monster-duty?deep_link_value=games_v1&amp;deep_link_sub1=vvkbv5A3n04TQtzrjPoV&amp;deep_link_sub3=sharpflare446&amp;deep_link_sub4=monster-duty&amp;onelink_id=SCEr&amp;af_force_deeplink=true" target="_blank" rel="noopener noreferrer">Play game <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio#monster-duty" target="_blank" rel="noopener noreferrer">View project notes on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="project-group-heading">
+            <p class="eyebrow">Web development</p>
+            <h3>Applications &amp; Web Projects</h3>
+          </div>
+          <div class="projects">
+            <article class="project">
+              <p class="project-type">Portfolio</p>
+              <h3>My Portfolio / CV</h3>
+              <p class="project-description">My professional corner on the web, architected for hyper-clean semantic structure, rapid load optimization, and international hiring compatibility.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>Semantic HTML5</li><li>Modern CSS Architecture</li><li>SEO Optimization</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="https://whimsical-cajeta-67b4f9.netlify.app/" target="_blank" rel="noopener noreferrer">Visit project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/portfolio.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="project">
+              <p class="project-type">Front-End Development Libraries</p>
+              <h3>JavaScript Calculator</h3>
+              <p class="project-description">An interactive calculator application engineered to handle strict string operations and precision mathematical calculations. Built to clear rigorous automated unit testing suites.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>React.js</li><li>String Processing</li><li>Edge-Case Error Handling</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="https://monumental-dragon-fa352a.netlify.app/" target="_blank" rel="noopener noreferrer">Visit project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/javascriptcalculator.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="project">
+              <p class="project-type">Front-End Development Libraries</p>
+              <h3>25 + 5 Clock</h3>
+              <p class="project-description">A fully customizable Pomodoro productivity timer managing concurrent countdown intervals, audio trigger events, and safe component lifecycle mounts.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>React Hooks</li><li>Asynchronous JavaScript</li><li>Interval Web APIs</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="https://aquamarine-youtiao-1b5ee0.netlify.app/" target="_blank" rel="noopener noreferrer">Visit project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/25--5clock.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="project">
+              <p class="project-type">Front-End Development Libraries</p>
+              <h3>Random Quote Machine</h3>
+              <p class="project-description">A light web app connecting directly to third-party data APIs to asynchronously fetch, parse, and dynamically inject stylized quotes with instant social sharing hookups.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>REST API Integration</li><li>Asynchronous Fetch</li><li>Dynamic DOM Updates</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="https://magical-licorice-60e8bc.netlify.app/" target="_blank" rel="noopener noreferrer">Visit project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/randomquotemachine.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="project">
+              <p class="project-type">Front-End Development Libraries</p>
+              <h3>Drum Machine</h3>
+              <p class="project-description">An audio playground tying real-time hardware keyboard triggers and touch actions to zero-latency sound sample nodes for seamless audio playback.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>Web Audio API</li><li>Keyboard Event Observers</li><li>UI Feedback Loops</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="Drum%20Machine.html" target="_blank" rel="noopener noreferrer">Open project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/Drum%20Machine.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="project">
+              <p class="project-type">Front-End Development Libraries</p>
+              <h3>Markdown Previewer</h3>
+              <p class="project-description">A real-time parser that instantly translates raw markdown syntax inputs into securely sanitized, stylized, and valid HTML strings layout elements.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>React.js</li><li>Text Parsing Engines</li><li>Cross-Site Scripting (XSS) Sanitization</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="https://lively-gnome-7447ff.netlify.app/" target="_blank" rel="noopener noreferrer">Visit project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/Markdown%20Previewer.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+
+            <article class="project">
+              <p class="project-type">Fashion</p>
+              <h3>Fashion Project</h3>
+              <p class="project-description">A high-fidelity fashion storefront landing layout built specifically to test advanced cross-device imagery optimization, layout wrapping, and responsive modern layout scaling.</p>
+              <ul class="project-stack" aria-label="Technologies used">
+                <li>Advanced CSS Flexbox</li><li>Fluid Typography</li><li>Visual Presentation</li>
+              </ul>
+              <div class="project-actions">
+                <a class="project-link" href="https://keen-bienenstitch-4dcf6f.netlify.app/" target="_blank" rel="noopener noreferrer">Visit project <span aria-hidden="true">↗</span></a>
+                <a class="project-link" href="https://github.com/Chim2006/portfolio/blob/main/fashion.html" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="certificates">
+        <div class="wrap">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Learning &amp; growth</p>
+              <h2>Certificates</h2>
+            </div>
+            <p>
+              Certifications earned through freeCodeCamp, with links to the
+              certificates and exam.
+            </p>
+          </div>
+
+          <div class="certifications">
+            <article class="certificate">
+              <span class="certificate-number" aria-hidden="true">01</span>
+              <h3>A2 English for Developers Certification</h3>
+              <div class="certificate-links">
+                <a
+                  href="https://www.freecodecamp.org/certification/fcc-41ab3310-5a2d-472c-8dca-852a3c324e25/a2-english-for-developers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View certificate ↗
+                </a>
+                <a
+                  href="https://www.freecodecamp.org/learn/a2-english-for-developers/en-a2-certification-exam/en-a2-certification-exam"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View certification exam ↗
+                </a>
+              </div>
+              <p class="certificate-note">
+                Demonstrated strong baseline technical communication capabilities required for clear documentation and seamless asynchronous collaboration across global remote teams.
+              </p>
+            </article>
+
+            <article class="certificate">
+              <span class="certificate-number" aria-hidden="true">02</span>
+              <h3>Front-End Development Libraries V8 Certification</h3>
+              <div class="certificate-links">
+                <a
+                  href="https://www.freecodecamp.org/certification/fcc-41ab3310-5a2d-472c-8dca-852a3c324e25/front-end-development-libraries"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View certificate ↗
+                </a>
+              </div>
+              <p class="certificate-note">
+                Successfully mastered core React methodologies, comprehensive component architecture, and automated test suite validation.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer wrap">
+      <p>Loretta Lawrence · Front-End &amp; Interactive Web Developer</p>
+      <a href="#home">Back to top ↑</a>
+    </footer>
+  </body>
+</html>
